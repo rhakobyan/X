@@ -14,10 +14,24 @@ public class HomeController {
         return "index";
     }
 
-     /*  @GetMapping("/")
-    public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
-        model.addAttribute("name", name);
-        return "index";
-    }*/
+     @GetMapping("/register")
+     public String register(){
+        return "register";
+     }
+
+    @GetMapping("/about")
+    public String about(){
+        return "about";
+    }
+
+    @GetMapping("/explore")
+    public String explore(){
+        return "explore";
+    }
+
+    @GetMapping("/contact")
+    public String contact(){
+        return "contact";
+    }
 
 }
