@@ -1,4 +1,7 @@
 package X;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -6,6 +9,20 @@ import java.util.regex.Pattern;
 
 
 public class Validation { //class declaration
+
+    @Autowired
+    private static JdbcTemplate template;
+
+    public static boolean hasErrors(User user){
+        if(emailValidation(user.getEmail())) {
+            return true;
+        }
+        else if(emailUsed(user.getEmail())){
+            return true;
+        }
+
+        return false;
+    }
 
     public boolean passwordsMatch(String firstPassword, String secondPassword) //method for checking if two entered
     //passwords match
@@ -16,9 +33,15 @@ public class Validation { //class declaration
         return false;                                   //passwords do not match, hence return false
     }
 
+    public static boolean emailUsed(String email){
+        String query = "SELECT email FROM user WHERE email='"+email+"'";
+        if(template.queryForList(query) != null){
+            return true;
+        }
+        return false;
+    }
 
-
-    public boolean emailValidation(String email) //method for checking if the email is in the right format
+    public static boolean emailValidation(String email) //method for checking if the email is in the right format
     {
         if(Pattern.compile("^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
                 + "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"

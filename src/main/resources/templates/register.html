@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <title>devix</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,18 +24,20 @@
 <!-- Header with full-height image -->
 <header id="home" style="padding:150px">
     <h1 style="text-align: center;">Register</h1>
-    <form action="/register" method="POST">
+    <form th:object="${user}" method="POST">
         <div class="container">
             <hr>
-
             <label for="username"><b>Username</b></label>
-            <input type="text" placeholder="Choose a username" name="username" required>
+            <label for="username" style="color:#b43636;" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></label>
+            <input type="text" th:field="*{username}" placeholder="Choose a username" name="username" required>
 
             <label for="email"><b>Email</b></label>
-            <input type="text" placeholder="Enter your email" name="email" required>
+            <label for="email" style="color:#b43636;" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></label>
+            <input type="text" th:field="*{email}" placeholder="Enter your email" name="email" required>
 
             <label for="password"><b>Password</b></label>
-            <input type="password" placeholder="Enter a password" name="password" required>
+            <label for="passowrd" style="color:#b43636;" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></label>
+            <input type="password" th:field="*{password}" placeholder="Enter a password" name="password" required>
             <hr>
             <div style="margin: 0 auto; text-align: center;">
                 <button type="submit" class="proceed-button">Register</button>
@@ -43,7 +45,7 @@
         </div>
 
         <div class="container signin">
-            <p>Already have an account? <a style="text-decoration: none; color: #929292;" href="#">Sign in</a>.</p>
+            <p>Already have an account? <a style="text-decoration: none; color: #929292;" href="/login">Sign in</a>.</p>
         </div>
     </form>
 </header>

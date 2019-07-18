@@ -23,29 +23,20 @@
 
 <!-- Header with full-height image -->
 <header id="home" style="padding:150px">
-    <h1 style="text-align: center;">Register</h1>
+    <h1 style="text-align: center;">Log In</h1>
     <form th:object="${user}" method="POST">
         <div class="container">
             <hr>
+            <h3 style="color:#b43636;" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></h3>
             <label for="username"><b>Username</b></label>
-            <label for="username" style="color:#b43636;" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></label>
-            <input type="text" th:field="*{username}" placeholder="Choose a username" name="username" required>
-
-            <label for="email"><b>Email</b></label>
-            <label for="email" style="color:#b43636;" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></label>
-            <input type="text" th:field="*{email}" placeholder="Enter your email" name="email" required>
+            <input type="text" th:field="*{username}" placeholder="Enter your username" name="username" required>
 
             <label for="password"><b>Password</b></label>
-            <label for="passowrd" style="color:#b43636;" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></label>
-            <input type="password" th:field="*{password}" placeholder="Enter a password" name="password" required>
+            <input type="password" th:field="*{password}" placeholder="Enter your password" name="password" required>
             <hr>
             <div style="margin: 0 auto; text-align: center;">
-                <button type="submit" class="proceed-button">Register</button>
+                <button type="submit" class="proceed-button">Log In</button>
             </div>
-        </div>
-
-        <div class="container signin">
-            <p>Already have an account? <a style="text-decoration: none; color: #929292;" href="/login">Sign in</a>.</p>
         </div>
     </form>
 </header>
