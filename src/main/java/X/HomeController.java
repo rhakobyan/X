@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -17,7 +18,10 @@ import java.util.Date;
 
 @Controller
 public class HomeController {
+    @Autowired
+    HttpSession session;
 
+    User thisUser;
     @GetMapping("/")
     public String home() {
         return "index";
@@ -29,7 +33,18 @@ public class HomeController {
     }
 
     @GetMapping("/explore")
-    public String explore(){
+    public String explore(Model model){
+        System.out.println("^^^^^^^^^^^^" + session.getId());
+        if(session.getAttribute("user") != null) {
+            thisUser = (User) session.getAttribute("user");
+            model.addAttribute("anonymous", false);
+
+            model.addAttribute("user", thisUser);
+            System.out.println("The username is "+ thisUser.getUsername());
+        }
+        else {
+            model.addAttribute("anonymous", true);
+        }
         return "explore";
     }
 

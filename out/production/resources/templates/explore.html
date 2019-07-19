@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <title>devix</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,7 +16,9 @@
         <div id="right-bar">
             <a href="/about" class="bar-item">About</a>
             <a href="/contact" class="bar-item">Contact</a>
-            <a href="/register" class="bar-item">Sign Up</i></a>
+
+            <a href="/register" th:if="${anonymous}" class="bar-item">Sign Up</i></a>
+            <a href="/register" th:unless="${anonymous}" th:text=${user.username} class="bar-item"></i></a>
         </div>
     </div>
 </div>
