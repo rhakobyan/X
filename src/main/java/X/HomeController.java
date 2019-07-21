@@ -18,8 +18,7 @@ import java.util.Date;
 
 @Controller
 public class HomeController {
-    @Autowired
-    HttpSession session;
+
 
     User thisUser;
     @GetMapping("/")
@@ -33,7 +32,7 @@ public class HomeController {
     }
 
     @GetMapping("/explore")
-    public String explore(Model model){
+    public String explore(Model model, HttpSession session){
         System.out.println("^^^^^^^^^^^^" + session.getId());
         if(session.getAttribute("user") != null) {
             thisUser = (User) session.getAttribute("user");

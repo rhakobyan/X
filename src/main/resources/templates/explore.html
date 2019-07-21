@@ -17,8 +17,8 @@
             <a href="/about" class="bar-item">About</a>
             <a href="/contact" class="bar-item">Contact</a>
 
-            <a href="/register" th:if="${anonymous}" class="bar-item">Sign Up</i></a>
-            <a href="/register" th:unless="${anonymous}" th:text=${user.username} class="bar-item"></i></a>
+            <a href="/register" th:if="${session.user == null}" class="bar-item">Sign Up</i></a>
+            <a href="/register" th:unless="${session.user == null}" th:text=${session.user.username} class="bar-item"></i></a>
         </div>
     </div>
 </div>
