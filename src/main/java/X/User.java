@@ -7,8 +7,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-@Component
-@Scope("session")
 public class User {
 
     @NotNull

@@ -22,10 +22,34 @@
     </div>
 </div>
 
-<!-- Header with full-height image -->
-<header id="home" style="padding:150px">
-    <h1>Contact Us</h1>
-</header>
+<div id="left-bar">
+    <div id="description">
+        <h3 th:text="${user.username}"></h3>
+        <h4>User</h4>
+    </div>
+    <div id="profile"></div>
+    <div id = "details">
+        <p>Registration: <span th:text="${user.registration}"></span></p>
+        <p>Reputation:</p>
+        <p>Uploads: </p>
+    </div>
+</div>
+<div id="tab-bar">
+    <div id="tab-buttons">
+        <button class="tablinks" onclick="openTab(event, 'messages')">Message Board</button>
+        <button class="tablinks" onclick="openTab(event, 'uploads')">Uploads</button>
+    </div>
+    <div id="tabs">
+        <div id="messages" class="tabcontent" style="display: block;">
+            <textarea id="message"></textarea>
+            <button id="send-message">Send Message</button>
+        </div>
+
+        <div id="uploads" class="tabcontent">
+            <h3>Uploads</h3>
+        </div>
+    </div>
+</div>
 
 <!-- Footer -->
 <footer id="footer">
@@ -35,6 +59,17 @@
         <i class="fa fa-instagram x-hover-opacity"></i>
     </div>
 </footer>
+
+<script>
+function openTab(evt, tabName) {
+  var i, tabcontent;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  document.getElementById(tabName).style.display = "block";
+}
+</script>
 
 </body>
 </html>

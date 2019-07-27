@@ -16,6 +16,7 @@
         <div id="right-bar">
             <a href="/about" class="bar-item">About</a>
             <a href="/contact" class="bar-item">Contact</a>
+
             <a href="/register" th:if="${session.user == null}" class="bar-item">Sign Up</i></a>
             <a th:href="@{/user/{username}(username=${session.user.username})}" th:unless="${session.user == null}" th:text=${session.user.username} class="bar-item"></i></a>
         </div>
@@ -24,7 +25,7 @@
 
 <!-- Header with full-height image -->
 <header id="home" style="padding:150px">
-    <h1>Contact Us</h1>
+    <h1>The user specified does not exist!</h1>
 </header>
 
 <!-- Footer -->
