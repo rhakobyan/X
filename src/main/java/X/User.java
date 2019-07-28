@@ -20,6 +20,7 @@ public class User {
     private String password;
     private String registration;
 
+    private int reputation;
     public User(){
 
     }
@@ -60,5 +61,13 @@ public class User {
 
     public void setRegistration(String registration) {
         this.registration = registration;
+    }
+
+    public int getReputation() {
+        return reputation;
+    }
+
+    public void setReputation(int reputation) {
+        this.reputation = reputation;
     }
 }

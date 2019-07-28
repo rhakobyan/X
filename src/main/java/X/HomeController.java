@@ -34,16 +34,6 @@ public class HomeController {
         return "about";
     }
 
-    @GetMapping("/explore")
-    public String explore(HttpSession session){
-        //This prints different results after closing the browser
-        System.out.println(session.getId());
-        if(session.getAttribute("user") != null) {
-            thisUser = (User) session.getAttribute("user");
-        }
-        return "explore";
-    }
-
     @GetMapping("/contact")
     public String contact(){
         return "contact";

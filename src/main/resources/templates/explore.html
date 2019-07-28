@@ -26,6 +26,27 @@
 <!-- Header with full-height image -->
 <header id="home" style="padding:150px">
     <h1>Explore Projects</h1>
+    <br>
+    <a th:if="${session.user != null}" class="proceed-button" onclick="openForm()">Add project</a>
+
+    <div id="upload-form">
+        <form method="POST" enctype="multipart/form-data" action="/">
+            <div id="left-upload">
+                <label for="projectname"><b>Project name</b></label>
+                <input type="text" placeholder="Choose a Project name" name="projectname" required>
+                <label for="projectdesc"><b>Project description</b></label>
+                <textarea style="border: 1px solid;" type="textarea" name="projectdesc" id="message" required></textarea>
+            </div>
+            <div id="right-upload">
+                <input type="file" name="file" id="file" onchange="rename()" />
+                <label id="file-label" for="file"><i id="upload-icon" class="fa fa-upload" aria-hidden="true"></i>Upload a file...</label>
+            </div>
+            <div id="upload-buttons">
+                <input id="upload-submit" type="submit" value="Submit" />
+                <button id="upload-cancel" type="button" onclick="closeForm()"> Cancel</button>
+            </div>
+        </form>
+    </div>
 </header>
 
 <!-- Footer -->
@@ -36,6 +57,33 @@
         <i class="fa fa-instagram x-hover-opacity"></i>
     </div>
 </footer>
+
+<script type="text/javascript">
+      function rename(){
+        var filename;
+        var fullPath = document.getElementById('file').value;
+    if (fullPath) {
+    var startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
+     filename = fullPath.substring(startIndex);
+    if (filename.indexOf('\\') === 0 || filename.indexOf('/') === 0) {
+        filename = filename.substring(1);
+    }
+}
+      if(filename.length > 16){
+        filename = filename.substring(0,13) + "...";
+      }
+      var label = document.getElementById("file-label");
+      label.innerHTML = filename;
+  }
+
+  function openForm(){
+  document.getElementById("upload-form").style.display = "block";
+  }
+
+  function closeForm(){
+  document.getElementById("upload-form").style.display = "none";
+  }
+</script>
 
 </body>
 </html>

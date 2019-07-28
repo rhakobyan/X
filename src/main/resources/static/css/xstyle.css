@@ -203,6 +203,7 @@ hr {
     height: 200px;
     resize: none;
     font-size: 15px;
+    background: #f1f1f1;
   }
 
   #send-message{
@@ -214,4 +215,87 @@ hr {
   font-size: 15px;
   padding: 20px;
   }
+
+
+  #right-upload{
+    margin-top: 195px;
+    margin-right: 15px;
+    float: right;
+  }
+
+  #left-upload{
+    margin-top: 15px;
+    margin-left: 15px;
+    float: left;
+    margin-right: 100px;
+  }
+
+  #file{
+    width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+  }
+
+   #file-label {
+    padding: 15px;
+    font-size: 25px;
+    cursor: pointer;
+    font-weight: 700;
+    color: white;
+    background-color: #192b3b;
+    border-radius: 5px;
+    display: block;
+}
+
+#file-label:hover {
+    background-color: #b43636;
+}
+
+#upload-icon{
+  margin-right: 10px;
+}
+
+#upload-form{
+  height: 450px;
+  display: none;
+  position: fixed;
+  border: 3px solid #192b3b;
+  border-radius: 5px;
+  background-color: white;
+     top: 50%;
+     transform: translate(10%, -50%);
+}
+
+#upload-buttons{
+  position: absolute;
+  bottom: 5px;
+    left:40%;
+}
+
+#upload-submit{
+  color: white;
+  font-size: 15px;
+  padding: 20px;
+  border-radius: 5px;
+  background-color: #192b3b;
+  cursor: pointer;
+}
+#upload-submit:hover{
+background-color: #929292;
+}
+#upload-cancel{
+  color: white;
+  font-size: 15px;
+  padding: 20px;
+  border-radius: 5px;
+  background-color: #b43636;
+  cursor: pointer;
+}
+
+#upload-cancel:hover{
+background-color: #929292;
+}
 

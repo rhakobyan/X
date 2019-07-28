@@ -30,7 +30,7 @@ public class DatabaseController {
 
     public void insertUser(User user){
         Date date = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String query = "INSERT INTO user (username, password, email, registration) VALUES ('"+user.getUsername()+"', '"+user.getPassword()+"', '"+user.getEmail()+"', '"+formatter.format(date)+"');";
         try {
             jdbcTemplate.execute(query);
@@ -55,6 +55,7 @@ public class DatabaseController {
             user.setUsername(users.get("username").toString());
             user.setRegistration(users.get("registration").toString());
             user.setEmail(users.get("email").toString());
+            user.setReputation(Integer.parseInt(users.get("reputation").toString()));
             return user;
         }
         throw new NoSuchUserException("User does not exist");
