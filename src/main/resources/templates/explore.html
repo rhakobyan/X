@@ -30,12 +30,12 @@
     <a th:if="${session.user != null}" class="proceed-button" onclick="openForm()">Add project</a>
 
     <div id="upload-form">
-        <form method="POST" enctype="multipart/form-data" action="/">
+        <form th:object="${upload}" method="POST" enctype="multipart/form-data">
             <div id="left-upload">
                 <label for="projectname"><b>Project name</b></label>
-                <input type="text" placeholder="Choose a Project name" name="projectname" required>
+                <input type="text" th:field="*{projectName}" placeholder="Choose a Project name" name="projectname" required>
                 <label for="projectdesc"><b>Project description</b></label>
-                <textarea style="border: 1px solid;" type="textarea" name="projectdesc" id="message" required></textarea>
+                <textarea th:field="*{projectDescription}" style="border: 1px solid;" type="textarea" name="projectdesc" id="message" required></textarea>
             </div>
             <div id="right-upload">
                 <input type="file" name="file" id="file" onchange="rename()" />

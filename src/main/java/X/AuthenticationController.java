@@ -51,13 +51,16 @@ public class AuthenticationController {
     @PostMapping("/login")
     public String logging(User user, BindingResult result, HttpSession session){
         user.setPassword(Validation.hash(user.getPassword()));
-        if(homeDatabaseController.userExists(user)) {
-            session.setAttribute("user", user);
-            return "redirect:/explore";
-        }
-        else {
-            result.rejectValue("username", "username.user", "The username or password is wrong!");
-            return "login";
-        }
+            try {
+                user = homeDatabaseController.findUserByUsername(user.getUsername());
+                session.setAttribute("user", user);
+                return "redirect:/explore";
+            }
+           catch (NoSuchUserException ex){
+               result.rejectValue("username", "username.user", "The username or password is wrong!");
+               return "login";
+           }
+
+
     }
 }

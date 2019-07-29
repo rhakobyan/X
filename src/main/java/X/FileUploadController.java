@@ -22,10 +22,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import X.storage.StorageFileNotFoundException;
 import X.storage.StorageService;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 public class FileUploadController {
 
     private final StorageService storageService;
+    @Autowired
+    private DatabaseController fileDatabaseController = new DatabaseController();
 
     @Autowired
     public FileUploadController(StorageService storageService) {
@@ -35,6 +39,7 @@ public class FileUploadController {
     @GetMapping("/explore")
     public String listUploadedFiles(Model model) throws IOException {
 
+        model.addAttribute("upload", new Upload());
        /* model.addAttribute("files", storageService.loadAll().map(
                 path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
                         "serveFile", path.getFileName().toString()).build().toString())
@@ -52,11 +57,14 @@ public class FileUploadController {
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
-    @PostMapping("/")
-    public String handleFileUpload(@RequestParam("file") MultipartFile file,
-                                   RedirectAttributes redirectAttributes) {
-
-        storageService.store(file);
+    @PostMapping("/explore")
+    public String handleFileUpload(Upload upload, @RequestParam("file") MultipartFile file,
+                                   RedirectAttributes redirectAttributes, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        upload.setUploaderID(user.getID());
+        fileDatabaseController.insertUpload(upload);
+        System.out.println(upload.getProjectName());
+        storageService.store(file, upload.getProjectName()+"-"+user.getID());
         redirectAttributes.addFlashAttribute("message",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");
 

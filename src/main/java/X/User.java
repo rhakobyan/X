@@ -21,6 +21,8 @@ public class User {
     private String registration;
 
     private int reputation;
+
+    private int ID;
     public User(){
 
     }
@@ -69,5 +71,13 @@ public class User {
 
     public void setReputation(int reputation) {
         this.reputation = reputation;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public int getID() {
+        return ID;
     }
 }

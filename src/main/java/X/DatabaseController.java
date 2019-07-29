@@ -40,6 +40,17 @@ public class DatabaseController {
         }
     }
 
+    public void insertUpload(Upload upload){
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+        int uploaderID = 0;
+        String query = "INSERT INTO Upload (projectName, projectDescription, location, filename, dateAdded, uploaderID) VALUES" +
+                "('"+upload.getProjectName()+"', '"+upload.getProjectDescription()+"', 'upload-dir/files', '"+upload.getProjectName()+"-"+upload.getUploaderID()+"'" +
+                ", '"+formatter.format(date)+"', '"+upload.getUploaderID()+"')";
+        jdbcTemplate.execute(query);
+    }
+
     public boolean userExists(User user){
         String query = "SELECT username FROM user WHERE username='"+user.getUsername()+"' AND password='"+user.getPassword()+"';";
         return !jdbcTemplate.queryForList(query).isEmpty();
@@ -56,6 +67,7 @@ public class DatabaseController {
             user.setRegistration(users.get("registration").toString());
             user.setEmail(users.get("email").toString());
             user.setReputation(Integer.parseInt(users.get("reputation").toString()));
+            user.setID(Integer.parseInt(users.get("userID").toString()));
             return user;
         }
         throw new NoSuchUserException("User does not exist");

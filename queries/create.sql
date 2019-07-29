@@ -1,0 +1,14 @@
+CREATE TABLE Upload (
+  uploadID INT AUTO_INCREMENT,
+  projectName VARCHAR(25) NOT NULL,
+  projectDescription VARCHAR(1000) NOT NULL,
+  location VARCHAR(50) NOT NULL,
+  fileName VARCHAR(50) NOT NULL,
+  dateAdded DATE NOT NULL,
+  rating INT NOT NULL DEFAULT 1,
+  uploaderID INT NOT NULL,
+  PRIMARY KEY (uploadID),
+  FOREIGN KEY (uploaderID) REFERENCES User(userID)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
+);
