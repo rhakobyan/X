@@ -1,6 +1,6 @@
 CREATE TABLE Upload (
   uploadID INT AUTO_INCREMENT,
-  projectName VARCHAR(25) NOT NULL,
+  projectName VARCHAR(25) UNIQUE NOT NULL,
   projectDescription VARCHAR(1000) NOT NULL,
   location VARCHAR(50) NOT NULL,
   fileName VARCHAR(50) NOT NULL,

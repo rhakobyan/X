@@ -1,6 +1,7 @@
 package X;
 
 
+import X.database.UserDatabaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,7 +23,7 @@ public class HomeController {
     User thisUser;
 
     @Autowired
-    DatabaseController homeDatabaseController = new DatabaseController();
+    UserDatabaseService userDatabaseService = new UserDatabaseService();
 
     @GetMapping("/")
     public String home() {
@@ -43,7 +44,7 @@ public class HomeController {
     @GetMapping("/user/{username}")
     public String userDetails(@PathVariable("username") String username, Model model){
         try {
-            User user = homeDatabaseController.findUserByUsername(username);
+            User user = userDatabaseService.findUserByUsername(username);
             System.out.println(user.getUsername());
             model.addAttribute("user", user);
             return "user";

@@ -1,5 +1,7 @@
 package X;
 
+import X.database.DatabaseService;
+import X.database.UserDatabaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +16,7 @@ import javax.validation.Valid;
 public class AuthenticationController {
 
     @Autowired
-    DatabaseController homeDatabaseController = new DatabaseController();
+    UserDatabaseService userDatabaseService = new UserDatabaseService();
 
     @GetMapping("/register")
     public String register(Model model){
@@ -29,16 +31,16 @@ public class AuthenticationController {
             result.rejectValue("email", "error.user", "Email is in the wrong format!");
         }
 
-        if(homeDatabaseController.hasDuplicate("user", "email", user.getEmail())){
+        if(userDatabaseService.hasDuplicate("email", user.getEmail())){
             result.rejectValue("email", "error.user", "Email is already taken!");
         }
-        if(homeDatabaseController.hasDuplicate("user", "username", user.getUsername())){
+        if(userDatabaseService.hasDuplicate("username", user.getUsername())){
             result.rejectValue("username", "username.user", "Username is already taken!");
         }
         if(result.hasErrors()){
             return "register";
         }
-        homeDatabaseController.insertUser(user);
+        userDatabaseService.insert(user);
         return "redirect:/explore";
     }
 
@@ -52,7 +54,7 @@ public class AuthenticationController {
     public String logging(User user, BindingResult result, HttpSession session){
         user.setPassword(Validation.hash(user.getPassword()));
             try {
-                user = homeDatabaseController.findUserByUsername(user.getUsername());
+                user = userDatabaseService.findUserByUsername(user.getUsername());
                 session.setAttribute("user", user);
                 return "redirect:/explore";
             }

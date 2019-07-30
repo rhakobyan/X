@@ -3,6 +3,7 @@ package X;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
+import X.database.UploadDatabaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -29,7 +30,7 @@ public class FileUploadController {
 
     private final StorageService storageService;
     @Autowired
-    private DatabaseController fileDatabaseController = new DatabaseController();
+    private UploadDatabaseService uploadDatabaseService = new UploadDatabaseService();
 
     @Autowired
     public FileUploadController(StorageService storageService) {
@@ -62,7 +63,7 @@ public class FileUploadController {
                                    RedirectAttributes redirectAttributes, HttpSession session) {
         User user = (User) session.getAttribute("user");
         upload.setUploaderID(user.getID());
-        fileDatabaseController.insertUpload(upload);
+        uploadDatabaseService.insert(upload);
         System.out.println(upload.getProjectName());
         storageService.store(file, upload.getProjectName()+"-"+user.getID());
         redirectAttributes.addFlashAttribute("message",
