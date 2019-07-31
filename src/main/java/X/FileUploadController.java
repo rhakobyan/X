@@ -65,7 +65,7 @@ public class FileUploadController {
         upload.setUploaderID(user.getID());
         uploadDatabaseService.insert(upload);
         System.out.println(upload.getProjectName());
-        storageService.store(file, upload.getProjectName()+"-"+user.getID());
+        storageService.storeProject(file, upload.getProjectName()+"-"+user.getID());
         redirectAttributes.addFlashAttribute("message",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");
 
@@ -75,6 +75,12 @@ public class FileUploadController {
     @ExceptionHandler(StorageFileNotFoundException.class)
     public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
         return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/user/{username}")
+    public String usedUpdate(@RequestParam("file") MultipartFile file){
+        storageService.storePicture(file, "");
+        return "redirect:/";
     }
 
 }

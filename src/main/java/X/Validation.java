@@ -57,6 +57,7 @@ public class Validation { //class declaration
         return false;   //not in the right format, so return false
     }
 
+
     public static String hash(String passwordToHash) //ecrypt the password
     {
         String generatedPassword = null;    //declare the generatedpassword variale

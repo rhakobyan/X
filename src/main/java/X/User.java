@@ -5,12 +5,14 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 public class User {
 
     @NotNull
-    @NotBlank(message="Email cannot be blank!")
+    @NotBlank(message="Username cannot be blank!")
+    @Pattern(regexp = "^[a-zA-Z0-9._-]{3,15}$", message = "Username is in the wrong format!")
     private String username;
     @NotNull
     @NotBlank(message="Email cannot be blank!")

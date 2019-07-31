@@ -28,7 +28,7 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public void store(MultipartFile file, String filenameStart) {
+    public void store(MultipartFile file, String filenameStart, Path path) {
         String filename = filenameStart + StringUtils.cleanPath(file.getOriginalFilename());
         try {
             if (file.isEmpty()) {
@@ -41,13 +41,23 @@ public class FileSystemStorageService implements StorageService {
                                 + filename);
             }
             try (InputStream inputStream = file.getInputStream()) {
-                Files.copy(inputStream, this.rootLocation.resolve(filename),
+                Files.copy(inputStream, path.resolve(filename),
                     StandardCopyOption.REPLACE_EXISTING);
             }
         }
         catch (IOException e) {
             throw new StorageException("Failed to store file " + filename, e);
         }
+    }
+
+    public void storePicture(MultipartFile file, String filenameStart){
+        Path location = Paths.get(rootLocation + "/pictures");
+        store(file, filenameStart, location);
+    }
+
+    public void storeProject(MultipartFile file, String filenameStart){
+        Path location = Paths.get(rootLocation + "/projects");
+        store(file, filenameStart, location);
     }
 
     @Override
@@ -88,8 +98,8 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public void deleteAll() {
-        FileSystemUtils.deleteRecursively(rootLocation.toFile());
+    public void deleteAll() {/*
+        FileSystemUtils.deleteRecursively(rootLocation.toFile());*/
     }
 
     @Override
