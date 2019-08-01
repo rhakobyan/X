@@ -27,7 +27,7 @@ public class UploadDatabaseService extends DatabaseService {
 
         int uploaderID = 0;
         String query = "INSERT INTO Upload (projectName, projectDescription, location, filename, dateAdded, uploaderID) VALUES" +
-                "('"+upload.getProjectName()+"', '"+upload.getProjectDescription()+"', 'upload-dir/files', '"+upload.getProjectName()+"-"+upload.getUploaderID()+"'" +
+                "('"+upload.getProjectName()+"', '"+upload.getProjectDescription()+"', 'upload-dir/projects', '"+upload.getFileName()+"'" +
                 ", '"+formatter.format(date)+"', '"+upload.getUploaderID()+"')";
         jdbcTemplate.execute(query);
     }

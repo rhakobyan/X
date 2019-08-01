@@ -25,10 +25,17 @@
 
 <!-- Header with full-height image -->
 <header id="home" style="padding:150px">
+    <h1 style="color:red;" th:text="${message}"></h1>
     <h1>Explore Projects</h1>
     <br>
     <a th:if="${session.user != null}" class="proceed-button" onclick="openForm()">Add project</a>
-
+    <div>
+        <ul>
+            <li th:each="file : ${files}">
+                <a th:href="${file}" th:text="${file}" />
+            </li>
+        </ul>
+    </div>
     <div id="upload-form">
         <form th:object="${upload}" method="POST" enctype="multipart/form-data">
             <div id="left-upload">

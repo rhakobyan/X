@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.stream.Collectors;
 
 import X.database.UploadDatabaseService;
+import X.storage.StorageException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -41,11 +42,10 @@ public class FileUploadController {
     public String listUploadedFiles(Model model) throws IOException {
 
         model.addAttribute("upload", new Upload());
-       /* model.addAttribute("files", storageService.loadAll().map(
+       model.addAttribute("files", storageService.loadAll().map(
                 path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
                         "serveFile", path.getFileName().toString()).build().toString())
                 .collect(Collectors.toList()));
-*/
         return "explore";
     }
 
@@ -63,13 +63,19 @@ public class FileUploadController {
                                    RedirectAttributes redirectAttributes, HttpSession session) {
         User user = (User) session.getAttribute("user");
         upload.setUploaderID(user.getID());
-        uploadDatabaseService.insert(upload);
-        System.out.println(upload.getProjectName());
-        storageService.storeProject(file, upload.getProjectName()+"-"+user.getID());
-        redirectAttributes.addFlashAttribute("message",
-                "You successfully uploaded " + file.getOriginalFilename() + "!");
+        try {
+            storageService.store(file, upload.getProjectName()+"-"+user.getID());
+            upload.setFileName(upload.getProjectName()+"-"+user.getID()+"-"+file.getOriginalFilename());
+            uploadDatabaseService.insert(upload);
+            redirectAttributes.addFlashAttribute("message",
+                    "You successfully uploaded " + upload.getFileName() + "!");
+            return "redirect:/explore";
+        }
+        catch (StorageException ex){
+            redirectAttributes.addFlashAttribute("message", ex.getMessage());
+            return "redirect:/explore";
+        }
 
-        return "redirect:/";
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)
@@ -79,7 +85,7 @@ public class FileUploadController {
 
     @PostMapping("/user/{username}")
     public String usedUpdate(@RequestParam("file") MultipartFile file){
-        storageService.storePicture(file, "");
+        storageService.store(file, "");
         return "redirect:/";
     }
 
