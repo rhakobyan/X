@@ -38,7 +38,7 @@
     <div id="tab-buttons">
         <button class="tablinks" onclick="openTab(event, 'messages')">Message Board</button>
         <button class="tablinks" onclick="openTab(event, 'uploads')">Uploads</button>
-        <button th:if="${session.user != null}" class="tablinks" onclick="openTab(event, 'edit')">Edit Profile</button>
+        <button th:if="${session.user != null && session.user.username== user.username}" class="tablinks" onclick="openTab(event, 'edit')">Edit Profile</button>
     </div>
     <div id="tabs">
         <div id="messages" class="tabcontent" style="display: block;">

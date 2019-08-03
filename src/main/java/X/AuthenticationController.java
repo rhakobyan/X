@@ -54,7 +54,7 @@ public class AuthenticationController {
     public String logging(User user, BindingResult result, HttpSession session){
         user.setPassword(Validation.hash(user.getPassword()));
             try {
-                user = userDatabaseService.findUserByUsername(user.getUsername());
+                user = userDatabaseService.findUserByLogin(user.getUsername(), user.getPassword());
                 session.setAttribute("user", user);
                 return "redirect:/explore";
             }

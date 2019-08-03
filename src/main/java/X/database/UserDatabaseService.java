@@ -55,4 +55,19 @@ public class UserDatabaseService extends DatabaseService {
         }
         throw new NoSuchUserException("User does not exist");
     }
+
+    public User findUserByLogin(String username, String password) throws NoSuchUserException {
+        String query = "SELECT * FROM user WHERE username='"+username+"' AND password='"+password+"'";
+        if (!jdbcTemplate.queryForList(query).isEmpty()) {
+            User user = new User();
+            Map<String, Object> users = jdbcTemplate.queryForList(query).get(0);
+            user.setUsername(users.get("username").toString());
+            user.setRegistration(users.get("registration").toString());
+            user.setEmail(users.get("email").toString());
+            user.setReputation(Integer.parseInt(users.get("reputation").toString()));
+            user.setID(Integer.parseInt(users.get("userID").toString()));
+            return user;
+        }
+        throw new NoSuchUserException("User does not exist");
+    }
 }

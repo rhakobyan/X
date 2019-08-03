@@ -6,7 +6,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class UploadDatabaseService extends DatabaseService {
@@ -36,6 +39,25 @@ public class UploadDatabaseService extends DatabaseService {
         Upload upload = (Upload) object;
         String query = "SELECT username FROM "+TABLE_NAME+" WHERE projectName='"+upload.getProjectName()+"'";
         return !jdbcTemplate.queryForList(query).isEmpty();
+    }
+
+    public List<Upload> loadAll(){
+        String query = "SELECT * FROM " + TABLE_NAME +" ORDER BY rating";
+        return convertToUploadList(jdbcTemplate.queryForList(query));
+    }
+
+    private List<Upload> convertToUploadList(List<Map<String, Object>> uploadsListMap){
+        if (!uploadsListMap.isEmpty()) {
+            List<Upload> uploadList= new ArrayList<>();
+           for (int i=0; i<uploadsListMap.size(); i++){
+               Map<String, Object> uploadMap = uploadsListMap.get(i);
+               Upload upload = new Upload();
+               upload.generateFromMap(uploadMap);
+               uploadList.add(upload);
+           }
+           return uploadList;
+        }
+        return null;
     }
 
 }

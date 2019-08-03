@@ -1,5 +1,7 @@
 package X;
 
+import java.util.Map;
+
 public class Upload {
     private int uploadID;
     private String projectName;
@@ -79,5 +81,16 @@ public class Upload {
 
     public int getUploaderID() {
         return uploaderID;
+    }
+
+    public void generateFromMap(Map<String, Object> map){
+        setUploadID(Integer.parseInt(map.get("uploadID").toString()));
+        setProjectName(map.get("projectName").toString());
+        setProjectDescription(map.get("projectDescription").toString());
+        setLocation(map.get("location").toString());
+        setFileName(map.get("fileName").toString());
+        setDateAdded(map.get("dateAdded").toString());
+        setRating(Integer.parseInt(map.get("rating").toString()));
+        setUploaderID(Integer.parseInt(map.get("uploaderID").toString()));
     }
 }

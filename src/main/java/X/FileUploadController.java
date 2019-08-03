@@ -1,6 +1,7 @@
 package X;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import X.database.UploadDatabaseService;
@@ -42,10 +43,14 @@ public class FileUploadController {
     public String listUploadedFiles(Model model) throws IOException {
 
         model.addAttribute("upload", new Upload());
-       model.addAttribute("files", storageService.loadAll().map(
+       /*model.addAttribute("files", storageService.loadAll().map(
                 path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
                         "serveFile", path.getFileName().toString()).build().toString())
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList()));*/
+        List<Upload> uploads = uploadDatabaseService.loadAll();
+       for (int i = 0; i<uploads.size(); i++){
+           System.out.println(uploads.get(i).getProjectName());
+       }
         return "explore";
     }
 
