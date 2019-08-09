@@ -42,7 +42,7 @@ public class UploadDatabaseService extends DatabaseService {
     }
 
     public List<Upload> loadAll(){
-        String query = "SELECT * FROM " + TABLE_NAME +" ORDER BY rating";
+        String query = "SELECT * FROM " + TABLE_NAME +" ORDER BY rating DESC";
         return convertToUploadList(jdbcTemplate.queryForList(query));
     }
 

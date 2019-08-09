@@ -1,26 +1,83 @@
-<html xmlns:th="https://www.thymeleaf.org">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<title>devix</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/css/xstyle.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <body>
 
-<div th:if="${message}">
-    <h2 th:text="${message}"/>
+<!-- Navbar (sit on top) -->
+<div id="container-navbar">
+    <div id="navbar">
+        <a href="/" id="logo"class="bar-item"><span style="color: #192b3b">dev</span><span style="color: #b43636">i</span><span style="color: #192b3b">x</span></a>
+        <!-- Right-sided navbar links -->
+        <div id="right-bar">
+            <a href="/about"  th:if="${session.user == null}" class="bar-item">About</a>
+            <a th:if="${session.user != null}" class="bar-item" href="/new-project">Add project</a>
+
+
+            <a href="/contact" th:if="${session.user == null}" class="bar-item">Contact</a>
+            <a href="/explore" th:if="${session.user != null}" class="bar-item">Explore</a>
+
+            <a href="/register" th:if="${session.user == null}" class="bar-item">Sign Up</i></a>
+            <a th:href="@{/user/{username}(username=${session.user.username})}" th:unless="${session.user == null}" th:text=${session.user.username} class="bar-item"></i></a>
+        </div>
+    </div>
 </div>
 
-<div>
-    <form method="POST" enctype="multipart/form-data" action="/">
-        <table>
-            <tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
-            <tr><td></td><td><input type="submit" value="Upload" /></td></tr>
-        </table>
-    </form>
-</div>
+<!-- Header with full-height image -->
+<header id="home" style="padding-top:150px">
+    <h1>Add new project</h1>
+    <br>
 
-<div>
-    <ul>
-        <li th:each="file : ${files}">
-            <a th:href="${file}" th:text="${file}" />
-        </li>
-    </ul>
-</div>
+    <div id="upload-form">
+        <form th:object="${upload}" method="POST" enctype="multipart/form-data">
+            <div id="left-upload">
+                <label for="projectname"><b>Project name</b></label>
+                <input type="text" th:field="*{projectName}" placeholder="Choose a Project name" name="projectname" required>
+                <label for="projectdesc"><b>Project description</b></label>
+                <textarea th:field="*{projectDescription}" style="border: 1px solid;" type="textarea" name="projectdesc" id="message" required></textarea>
+            </div>
+            <div id="right-upload">
+                <input type="file" name="file" id="file" onchange="rename()" />
+                <label id="file-label" for="file"><i id="upload-icon" class="fa fa-upload" aria-hidden="true"></i>Upload a file...</label>
+            </div>
+            <div id="upload-buttons"  style="text-align: center;">
+                <input class="proceed-button" type="submit" value="Submit" />
+            </div>
+        </form>
+    </div>
+</header>
+
+<!-- Footer -->
+<footer id="footer">
+    <div id="footer-container" style="text-align: center;">
+        <i class="fa fa-twitter x-hover-opacity"></i>
+        <i class="fa fa-facebook-official x-hover-opacity"></i>
+        <i class="fa fa-instagram x-hover-opacity"></i>
+    </div>
+</footer>
+
+<script type="text/javascript">
+      function rename(){
+        var filename;
+        var fullPath = document.getElementById('file').value;
+    if (fullPath) {
+    var startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
+     filename = fullPath.substring(startIndex);
+    if (filename.indexOf('\\') === 0 || filename.indexOf('/') === 0) {
+        filename = filename.substring(1);
+    }
+}
+      if(filename.length > 16){
+        filename = filename.substring(0,13) + "...";
+      }
+      var label = document.getElementById("file-label");
+      label.innerHTML = filename;
+  }
+</script>
 
 </body>
 </html>

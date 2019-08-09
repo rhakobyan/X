@@ -70,4 +70,10 @@ public class UserDatabaseService extends DatabaseService {
         }
         throw new NoSuchUserException("User does not exist");
     }
+
+    public String getUsernameByID(int id){
+        String query = "SELECT username FROM user WHERE userID="+id+"";
+        String result =  jdbcTemplate.queryForObject(query, String.class);
+        return result;
+    }
 }

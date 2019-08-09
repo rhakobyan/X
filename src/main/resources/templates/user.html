@@ -14,13 +14,19 @@
         <a href="/" id="logo"class="bar-item"><span style="color: #192b3b">dev</span><span style="color: #b43636">i</span><span style="color: #192b3b">x</span></a>
         <!-- Right-sided navbar links -->
         <div id="right-bar">
-            <a href="/about" class="bar-item">About</a>
-            <a href="/contact" class="bar-item">Contact</a>
+            <a href="/about"  th:if="${session.user == null}" class="bar-item">About</a>
+            <a th:if="${session.user != null}" class="bar-item" href="/new-project">Add project</a>
+
+
+            <a href="/contact" th:if="${session.user == null}" class="bar-item">Contact</a>
+            <a href="/explore" th:if="${session.user != null}" class="bar-item">Explore</a>
+
             <a href="/register" th:if="${session.user == null}" class="bar-item">Sign Up</i></a>
             <a th:href="@{/user/{username}(username=${session.user.username})}" th:unless="${session.user == null}" th:text=${session.user.username} class="bar-item"></i></a>
         </div>
     </div>
 </div>
+
 
 <div id="left-bar">
     <div id="description">

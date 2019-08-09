@@ -258,17 +258,6 @@ hr {
   margin-right: 10px;
 }
 
-#upload-form{
-  height: 450px;
-  display: none;
-  position: fixed;
-  border: 3px solid #192b3b;
-  border-radius: 5px;
-  background-color: white;
-     top: 50%;
-     transform: translate(10%, -50%);
-}
-
 #upload-buttons{
   position: absolute;
   bottom: 5px;
@@ -295,7 +284,41 @@ background-color: #929292;
   cursor: pointer;
 }
 
-#upload-cancel:hover{
-background-color: #929292;
+.grid-container {
+  display: grid;
+  grid-gap: 50px;
+  grid-template-columns: auto auto auto auto;
+  padding: 20px;
+  margin: 0 auto;
+
 }
+
+.grid-item {
+  padding: 7px;
+  width: 300px;
+  height: 300px;
+  border: 1px solid #929292;
+  border-radius: 8px;
+}
+
+#firstSection{
+  height: 10%;
+  display: inline-block;
+}
+
+#secondSection{
+  height: 80%;
+}
+
+#thirdSection{
+  height: 10%;
+  color: #7e8c65;
+}
+
+a{
+  color: #ffa100;
+  text-decoration: none;
+}
+
+
 

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import X.database.UploadDatabaseService;
+import X.database.UserDatabaseService;
 import X.storage.StorageException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -33,6 +34,8 @@ public class FileUploadController {
     private final StorageService storageService;
     @Autowired
     private UploadDatabaseService uploadDatabaseService = new UploadDatabaseService();
+    @Autowired
+    private UserDatabaseService userDatabaseService = new UserDatabaseService();
 
     @Autowired
     public FileUploadController(StorageService storageService) {
@@ -42,15 +45,17 @@ public class FileUploadController {
     @GetMapping("/explore")
     public String listUploadedFiles(Model model) throws IOException {
 
-        model.addAttribute("upload", new Upload());
        /*model.addAttribute("files", storageService.loadAll().map(
                 path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
                         "serveFile", path.getFileName().toString()).build().toString())
                 .collect(Collectors.toList()));*/
         List<Upload> uploads = uploadDatabaseService.loadAll();
-       for (int i = 0; i<uploads.size(); i++){
-           System.out.println(uploads.get(i).getProjectName());
-       }
+        for (int i=0; i<uploads.size(); i++){
+            uploads.get(i).setUsername(userDatabaseService.getUsernameByID(uploads.get(i).getUploaderID()));
+        }
+           model.addAttribute("projects", uploads);
+           //model.addAttribute("projectUserName", uploadDatabaseService.getUserNameByID())
+
         return "explore";
     }
 

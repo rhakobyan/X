@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.sql.SQLException;
@@ -57,4 +58,13 @@ public class HomeController {
         return "noUser";
     }
 
+    @GetMapping("/new-project")
+    public String newProject(Model model, HttpSession session){
+        /*if(session.getAttribute("user") == null)
+        {
+            return "redirect:/explore";
+        }*/
+        model.addAttribute("upload", new Upload());
+        return "upload";
+    }
 }
