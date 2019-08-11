@@ -28,27 +28,26 @@
 </div>
 
 <!-- Header with full-height image -->
-<header id="home" style="padding-top:150px">
-    <h1>Add new project</h1>
+<header id="home" style="padding:150px">
+    <h1>Add a new project</h1>
     <br>
 
-    <div id="upload-form">
-        <form th:object="${upload}" method="POST" enctype="multipart/form-data">
-            <div id="left-upload">
-                <label for="projectname"><b>Project name</b></label>
-                <input type="text" th:field="*{projectName}" placeholder="Choose a Project name" name="projectname" required>
-                <label for="projectdesc"><b>Project description</b></label>
-                <textarea th:field="*{projectDescription}" style="border: 1px solid;" type="textarea" name="projectdesc" id="message" required></textarea>
+    <form th:object="${upload}" method="POST" enctype="multipart/form-data">
+        <div class="container">
+            <hr>
+            <label for="projectname"><b>Project name</b></label>
+            <input type="text" th:field="*{projectName}" placeholder="Choose a Project name" name="projectname" required>
+            <label for="projectdesc"><b>Project description</b></label>
+            <textarea th:field="*{projectDescription}" style="border: 1px solid;" type="textarea" name="projectdesc" id="message" placeholder="Enter project description" required></textarea>
+            <input type="file" name="file" id="file" onchange="rename()" />
+            <label id="file-label" for="file"><i id="upload-icon" class="fa fa-upload" aria-hidden="true"></i>Upload a file...</label>
+            <hr>
+            <div style="margin: 0 auto; text-align: center;">
+                <button type="submit" class="proceed-button">Upload</button>
             </div>
-            <div id="right-upload">
-                <input type="file" name="file" id="file" onchange="rename()" />
-                <label id="file-label" for="file"><i id="upload-icon" class="fa fa-upload" aria-hidden="true"></i>Upload a file...</label>
-            </div>
-            <div id="upload-buttons"  style="text-align: center;">
-                <input class="proceed-button" type="submit" value="Submit" />
-            </div>
-        </form>
-    </div>
+        </div>
+    </form>
+
 </header>
 
 <!-- Footer -->
@@ -72,10 +71,10 @@
     }
 }
       if(filename.length > 16){
-        filename = filename.substring(0,13) + "...";
+        filename = filename.substring(0,12) + "...";
       }
       var label = document.getElementById("file-label");
-      label.innerHTML = filename;
+      label.innerHTML = "<i id='upload-icon' class='fa fa-upload' aria-hidden='true'></i>" + filename;
   }
 </script>
 

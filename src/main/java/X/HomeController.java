@@ -47,7 +47,7 @@ public class HomeController {
     public String userDetails(@PathVariable("username") String username, Model model){
         try {
             User user = userDatabaseService.findUserByUsername(username);
-            System.out.println(user.getUsername());
+            System.out.println(user.getProfilePictureLocation());
             model.addAttribute("user", user);
             return "user";
         }
@@ -60,10 +60,10 @@ public class HomeController {
 
     @GetMapping("/new-project")
     public String newProject(Model model, HttpSession session){
-        /*if(session.getAttribute("user") == null)
+        if(session.getAttribute("user") == null)
         {
             return "redirect:/explore";
-        }*/
+        }
         model.addAttribute("upload", new Upload());
         return "upload";
     }

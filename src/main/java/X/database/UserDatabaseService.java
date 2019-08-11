@@ -51,6 +51,7 @@ public class UserDatabaseService extends DatabaseService {
             user.setEmail(users.get("email").toString());
             user.setReputation(Integer.parseInt(users.get("reputation").toString()));
             user.setID(Integer.parseInt(users.get("userID").toString()));
+            user.setProfilePictureLocation(users.get("profilePictureLocation").toString());
             return user;
         }
         throw new NoSuchUserException("User does not exist");
@@ -66,6 +67,7 @@ public class UserDatabaseService extends DatabaseService {
             user.setEmail(users.get("email").toString());
             user.setReputation(Integer.parseInt(users.get("reputation").toString()));
             user.setID(Integer.parseInt(users.get("userID").toString()));
+            user.setProfilePictureLocation(users.get("profilePictureLocation").toString());
             return user;
         }
         throw new NoSuchUserException("User does not exist");
@@ -75,5 +77,10 @@ public class UserDatabaseService extends DatabaseService {
         String query = "SELECT username FROM user WHERE userID="+id+"";
         String result =  jdbcTemplate.queryForObject(query, String.class);
         return result;
+    }
+
+    public void updateProfile(String filename, int userID){
+        String query = "UPDATE "+TABLE_NAME+" SET profilePictureLocation='/"+filename+"' WHERE userID="+userID+"";
+        jdbcTemplate.execute(query);
     }
 }

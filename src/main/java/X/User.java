@@ -25,6 +25,10 @@ public class User {
     private int reputation;
 
     private int ID;
+
+    private String profilePictureLocation;
+
+
     public User(){
 
     }
@@ -81,5 +85,13 @@ public class User {
 
     public int getID() {
         return ID;
+    }
+
+    public String getProfilePictureLocation() {
+        return profilePictureLocation;
+    }
+
+    public void setProfilePictureLocation(String profilePictureLocation) {
+        this.profilePictureLocation = "/files" + profilePictureLocation;
     }
 }

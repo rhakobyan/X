@@ -33,7 +33,7 @@
         <h3 th:text="${user.username}"></h3>
         <h4>User</h4>
     </div>
-    <div id="profile"></div>
+    <div id="profile" th:style="'background-image:url(' + ${user.profilePictureLocation} + ');'"></div>
     <div id = "details">
         <p>Registration: <span th:text="${user.registration}"></span></p>
         <p>Reputation: <span th:text="${user.reputation}"></span></p>

@@ -68,7 +68,7 @@ public class FileUploadController {
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
-    @PostMapping("/explore")
+    @PostMapping("/new-project")
     public String handleFileUpload(Upload upload, @RequestParam("file") MultipartFile file,
                                    RedirectAttributes redirectAttributes, HttpSession session) {
         User user = (User) session.getAttribute("user");
@@ -94,8 +94,13 @@ public class FileUploadController {
     }
 
     @PostMapping("/user/{username}")
-    public String usedUpdate(@RequestParam("file") MultipartFile file){
-        storageService.store(file, "");
+    public String usedUpdate(@RequestParam("file") MultipartFile file, HttpSession session){
+        User user = (User) session.getAttribute("user");
+        String filename = user.getUsername()+"-"+user.getID();
+        storageService.store(file, user.getUsername()+"-"+user.getID());
+        filename= filename+"-"+file.getOriginalFilename();
+       filename = filename.replaceAll("\\s+","-");
+        userDatabaseService.updateProfile(filename, user.getID());
         return "redirect:/";
     }
 
