@@ -30,8 +30,8 @@
 
 <div id="left-bar">
     <div id="description">
-        <h3 th:text="${user.username}"></h3>
-        <h4>User</h4>
+        <h3 th:style="'color:'+${user.role.usernameColour}+''" th:text="${user.username}"></h3>
+        <h4 th:style="'color:'+${user.role.colour}+''" th:text="${user.role.name}"></h4>
     </div>
     <div id="profile" th:style="'background-image:url(' + ${user.profilePictureLocation} + ');'"></div>
     <div id = "details">

@@ -2,6 +2,7 @@ package X.database;
 
 import X.NoSuchUserException;
 import X.User;
+import X.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,10 @@ public class UserDatabaseService extends DatabaseService {
         String query = "INSERT INTO "+TABLE_NAME+" (username, password, email, registration) VALUES ('"+user.getUsername()+"', '"+user.getPassword()+"', '"+user.getEmail()+"', '"+formatter.format(date)+"');";
         try {
             jdbcTemplate.execute(query);
+            String getIDQuery = "SELECT userID FROM User WHERE username='"+user.getUsername()+"'";
+            Integer userID = jdbcTemplate.queryForObject(getIDQuery, Integer.class);
+            String roleQuery = "INSERT INTO UserRole (userID, roleID) VALUES("+userID+",1)";
+            jdbcTemplate.execute(roleQuery);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -46,12 +51,12 @@ public class UserDatabaseService extends DatabaseService {
         if (!jdbcTemplate.queryForList(query).isEmpty()) {
             User user = new User();
             Map<String, Object> users = jdbcTemplate.queryForList(query).get(0);
-            user.setUsername(users.get("username").toString());
-            user.setRegistration(users.get("registration").toString());
-            user.setEmail(users.get("email").toString());
-            user.setReputation(Integer.parseInt(users.get("reputation").toString()));
-            user.setID(Integer.parseInt(users.get("userID").toString()));
-            user.setProfilePictureLocation(users.get("profilePictureLocation").toString());
+            String roleQuery = "SELECT * FROM Role INNER JOIN UserRole ON UserRole.roleID = Role.roleID WHERE userID = "+Integer.parseInt(users.get("userID").toString())+" ORDER BY priority DESC;";
+            Map<String, Object> roleMap = jdbcTemplate.queryForList(roleQuery).get(0);
+            Role role = new Role();
+            role.generateFromMap(roleMap);
+            user.generateFromMap(users);
+            user.setRole(role);
             return user;
         }
         throw new NoSuchUserException("User does not exist");
@@ -62,12 +67,12 @@ public class UserDatabaseService extends DatabaseService {
         if (!jdbcTemplate.queryForList(query).isEmpty()) {
             User user = new User();
             Map<String, Object> users = jdbcTemplate.queryForList(query).get(0);
-            user.setUsername(users.get("username").toString());
-            user.setRegistration(users.get("registration").toString());
-            user.setEmail(users.get("email").toString());
-            user.setReputation(Integer.parseInt(users.get("reputation").toString()));
-            user.setID(Integer.parseInt(users.get("userID").toString()));
-            user.setProfilePictureLocation(users.get("profilePictureLocation").toString());
+            String roleQuery = "SELECT * FROM Role INNER JOIN UserRole ON UserRole.roleID = Role.roleID WHERE userID = "+Integer.parseInt(users.get("userID").toString())+" ORDER BY priority DESC;";
+            Map<String, Object> roleMap = jdbcTemplate.queryForList(roleQuery).get(0);
+            Role role = new Role();
+            role.generateFromMap(roleMap);
+            user.generateFromMap(users);
+            user.setRole(role);
             return user;
         }
         throw new NoSuchUserException("User does not exist");

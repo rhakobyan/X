@@ -7,6 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.Date;
+import java.util.Map;
 
 public class User {
 
@@ -28,6 +29,7 @@ public class User {
 
     private String profilePictureLocation;
 
+    private Role role;
 
     public User(){
 
@@ -93,5 +95,22 @@ public class User {
 
     public void setProfilePictureLocation(String profilePictureLocation) {
         this.profilePictureLocation = "/files" + profilePictureLocation;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public void generateFromMap(Map<String, Object> map){
+        setUsername(map.get("username").toString());
+        setRegistration(map.get("registration").toString());
+        setEmail(map.get("email").toString());
+        setReputation(Integer.parseInt(map.get("reputation").toString()));
+        setID(Integer.parseInt(map.get("userID").toString()));
+        setProfilePictureLocation(map.get("profilePictureLocation").toString());
     }
 }
