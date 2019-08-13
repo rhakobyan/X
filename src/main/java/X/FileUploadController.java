@@ -73,6 +73,10 @@ public class FileUploadController {
                                    RedirectAttributes redirectAttributes, HttpSession session) {
         User user = (User) session.getAttribute("user");
         upload.setUploaderID(user.getID());
+        if(!PermissionManager.hasCreateProjectPermission(user)){
+            redirectAttributes.addFlashAttribute("message", "You are not allowed to create a project!");
+            return "redirect:/explore";
+        }
         try {
             storageService.store(file, upload.getProjectName()+"-"+user.getID());
             upload.setFileName(upload.getProjectName()+"-"+user.getID()+"-"+file.getOriginalFilename());

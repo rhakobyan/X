@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
@@ -30,6 +31,8 @@ public class User {
     private String profilePictureLocation;
 
     private Role role;
+
+    private ArrayList<Role> roles = new ArrayList<>();
 
     public User(){
 
@@ -104,6 +107,14 @@ public class User {
     public void setRole(Role role) {
         this.role = role;
     }
+
+   public void addRole(Role role){
+        roles.add(role);
+   }
+
+   public ArrayList<Role> getRoles(){
+        return roles;
+   }
 
     public void generateFromMap(Map<String, Object> map){
         setUsername(map.get("username").toString());

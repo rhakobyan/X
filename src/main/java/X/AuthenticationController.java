@@ -55,8 +55,14 @@ public class AuthenticationController {
         user.setPassword(Validation.hash(user.getPassword()));
             try {
                 user = userDatabaseService.findUserByLogin(user.getUsername(), user.getPassword());
-                session.setAttribute("user", user);
-                return "redirect:/explore";
+                if (PermissionManager.hasLogInPermission(user)) {
+                    session.setAttribute("user", user);
+                    return "redirect:/explore";
+                }
+                else {
+                    result.rejectValue("username", "username.user", "You are not allowed to log in!");
+                    return "login";
+                }
             }
            catch (NoSuchUserException ex){
                result.rejectValue("username", "username.user", "The username or password is wrong!");

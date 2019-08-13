@@ -1,5 +1,6 @@
 package X;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class Role {
@@ -11,6 +12,8 @@ public class Role {
     private String colour;
 
     private String usernameColour;
+
+    private ArrayList<String> permissions;
 
     public Role(){
 
@@ -52,7 +55,14 @@ public class Role {
         setId(Integer.parseInt(map.get("roleID").toString()));
         setName(map.get("name").toString());
         setColour(map.get("colour").toString());
-        setUsernameColour(map.get("usernameColour").toString());
+    }
+
+    public void setPermissions(ArrayList<String> permissions){
+        this.permissions = permissions;
+    }
+
+    public ArrayList<String> getPermissions(){
+        return permissions;
     }
 }
 

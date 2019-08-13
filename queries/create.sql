@@ -55,3 +55,46 @@ CREATE TABLE UserRole (
   ON DELETE CASCADE
   ON UPDATE CASCADE
 );
+
+CREATE TABLE Permission (
+  permissionID INT AUTO_INCREMENT,
+  name VARCHAR(50) NOT NULL UNIQUE,
+  description VARCHAR(100) NOT NULL,
+  PRIMARY KEY (permissionID)
+);
+
+CREATE TABLE RolePermission (
+  roleID INT,
+  permissionID INT,
+  PRIMARY KEY (roleID, permissionID),
+  FOREIGN KEY (permissionID) REFERENCES Permission(permissionID)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
+  FOREIGN KEY (roleID) REFERENCES Role(roleID)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
+);
+
+INSERT INTO Permission(name, description) VALUES
+("login", "Can Log In"),
+("create_project", "Can create a project"),
+("downvote", "Can downvote anything"),
+("write_guides", "Can write guides"),
+("delete_project", "Can delete projects"),
+("delete_review", "Can delete project reviews"),
+("ban", "Can ban users with higher priority"),
+("unban", "Can unban users with higher priority"),
+("delete_message", "Can delete messages on users' message boards"),
+("control_panel", "Can access the Control Panel"),
+("warn", "Can send warn messages to users when they are violating the rules"),
+("delete_reputation", "Can delete reputation points"),
+("role_assignment", "Can assign roles to users"),
+("ip_ban", "Can ban IP addresses"),
+("change_username", "Can change the username of a user"),
+("rename_project", "Can rename a project"),
+("change_profile_picture", "Can change users' profile pictures"),
+("null_reputation", "Can delete the user's whole reputation"),
+("role_mangement", "Can create/delete/change roles"),
+("delete_user", "Can delete users");
+
+SELECT * FROM (SELECT name, priority, permissionID  FROM RolePermission INNER JOIN Role on Role.roleID = RolePermission.roleID) AS tbl INNER JOIN Permission on tbl.permissionID = Permission.permissionID;

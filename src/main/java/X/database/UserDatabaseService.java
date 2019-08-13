@@ -8,7 +8,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -51,7 +53,7 @@ public class UserDatabaseService extends DatabaseService {
         if (!jdbcTemplate.queryForList(query).isEmpty()) {
             User user = new User();
             Map<String, Object> users = jdbcTemplate.queryForList(query).get(0);
-            String roleQuery = "SELECT * FROM Role INNER JOIN UserRole ON UserRole.roleID = Role.roleID WHERE userID = "+Integer.parseInt(users.get("userID").toString())+" ORDER BY priority DESC;";
+            String roleQuery = "SELECT * FROM Role INNER JOIN UserRole ON UserRole.roleID = Role.roleID WHERE userID = "+Integer.parseInt(users.get("userID").toString())+" ORDER BY priority;";
             Map<String, Object> roleMap = jdbcTemplate.queryForList(roleQuery).get(0);
             Role role = new Role();
             role.generateFromMap(roleMap);
@@ -67,12 +69,16 @@ public class UserDatabaseService extends DatabaseService {
         if (!jdbcTemplate.queryForList(query).isEmpty()) {
             User user = new User();
             Map<String, Object> users = jdbcTemplate.queryForList(query).get(0);
-            String roleQuery = "SELECT * FROM Role INNER JOIN UserRole ON UserRole.roleID = Role.roleID WHERE userID = "+Integer.parseInt(users.get("userID").toString())+" ORDER BY priority DESC;";
-            Map<String, Object> roleMap = jdbcTemplate.queryForList(roleQuery).get(0);
-            Role role = new Role();
-            role.generateFromMap(roleMap);
             user.generateFromMap(users);
-            user.setRole(role);
+            String roleQuery = "SELECT * FROM Role INNER JOIN UserRole ON UserRole.roleID = Role.roleID WHERE userID = "+Integer.parseInt(users.get("userID").toString())+" ORDER BY priority;";
+            List<Map<String,Object>> roles = jdbcTemplate.queryForList(roleQuery);
+            for (int i=0; i<roles.size(); i++){
+                Role role = new Role();
+                role.generateFromMap(roles.get(i));
+                System.out.println(role.getName());
+                role.setPermissions(getPermissions(role.getId()));
+                user.addRole(role);
+            }
             return user;
         }
         throw new NoSuchUserException("User does not exist");
@@ -87,5 +93,21 @@ public class UserDatabaseService extends DatabaseService {
     public void updateProfile(String filename, int userID){
         String query = "UPDATE "+TABLE_NAME+" SET profilePictureLocation='/"+filename+"' WHERE userID="+userID+"";
         jdbcTemplate.execute(query);
+    }
+
+    private ArrayList<String> getPermissions(int roleID){
+        String query = "SELECT name FROM Permission INNER JOIN RolePermission ON Permission.permissionID = RolePermission.permissionID WHERE roleID="+roleID+"";
+        List<Map<String,Object>> rolePermissions = jdbcTemplate.queryForList(query);
+        ArrayList<String> permissions = new ArrayList<>();
+        for (int i=0; i<rolePermissions.size(); i++){
+            permissions.add(rolePermissions.get(i).get("name").toString());
+        }
+        return permissions;
+    }
+
+    public List<Map<String, Object>> getAllUsers(){
+        String query = "SELECT * FROM User;";
+        List<Map<String, Object>> users= jdbcTemplate.queryForList(query);
+        return users;
     }
 }

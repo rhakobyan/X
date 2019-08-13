@@ -27,10 +27,11 @@
     </div>
 </div>
 
-
+color: #3d3d3d;
+text-shadow: 0px 0px 5px #4b4b4b;
 <div id="left-bar">
     <div id="description">
-        <h3 th:style="'color:'+${user.role.usernameColour}+''" th:text="${user.username}"></h3>
+        <h3 th:style="'color:'+${user.role.colour}+'; text-shadow: 0px 0px 5px '+${user.role.colour}+';'" th:text="${user.username}"></h3>
         <h4 th:style="'color:'+${user.role.colour}+''" th:text="${user.role.name}"></h4>
     </div>
     <div id="profile" th:style="'background-image:url(' + ${user.profilePictureLocation} + ');'"></div>
