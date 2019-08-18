@@ -8,6 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
+import javax.servlet.http.HttpSessionListener;
+
 @SpringBootApplication
 @EnableConfigurationProperties(StorageProperties.class)
 public class XApp {
@@ -21,5 +23,11 @@ public class XApp {
         return (args) -> {
             storageService.init();
         };
+    }
+
+    @Bean
+    public HttpSessionListener httpSessionListener(){
+        //SessionListener should implement javax.servlet.http.HttpSessionListener
+        return new SessionListener();
     }
 }

@@ -18,17 +18,20 @@ public class ControlPanelController {
 
     @GetMapping("/cp")
     public String controlPanel(HttpSession session, Model model){
-        User user = (User) session.getAttribute("user");
-        if (user == null){
+        int id = (int) session.getAttribute("user");
+        User user = userDatabaseService.findUserByID(id);
+            if (user == null){
+                return "redirect:/";
+            }
+            if (PermissionManager.hasControlPanelPermission(user)){
+                List<Map<String, Object>> users = userDatabaseService.getAllUsers();
+                System.out.println(users);
+                model.addAttribute("users", users);
+                return "cp";
+            }
             return "redirect:/";
-        }
-        if (PermissionManager.hasControlPanelPermission(user)){
-            List<Map<String, Object>> users = userDatabaseService.getAllUsers();
-            System.out.println(users);
-            model.addAttribute("users", users);
-            return "cp";
-        }
-        return "redirect:/";
+
+
     }
 
 }

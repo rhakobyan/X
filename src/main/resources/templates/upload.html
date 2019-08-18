@@ -22,7 +22,7 @@
             <a href="/explore" th:if="${session.user != null}" class="bar-item">Explore</a>
 
             <a href="/register" th:if="${session.user == null}" class="bar-item">Sign Up</i></a>
-            <a th:href="@{/user/{username}(username=${session.user.username})}" th:unless="${session.user == null}" th:text=${session.user.username} class="bar-item"></i></a>
+            <a th:href="@{/user/{username}(username=${user.username})}" th:unless="${session.user == null}" th:text=${user.username} class="bar-item"></i></a>
         </div>
     </div>
 </div>

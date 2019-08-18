@@ -22,16 +22,21 @@
             <a href="/explore" th:if="${session.user != null}" class="bar-item">Explore</a>
 
             <a href="/register" th:if="${session.user == null}" class="bar-item">Sign Up</i></a>
-            <a th:href="@{/user/{username}(username=${session.user.username})}" th:unless="${session.user == null}" th:text=${session.user.username} class="bar-item"></i></a>
+            <a th:href="@{/user/{username}(username=${signedUser.username})}" th:unless="${session.user == null}" th:text=${signedUser.username} class="bar-item"></i></a>
         </div>
     </div>
 </div>
 
-color: #3d3d3d;
-text-shadow: 0px 0px 5px #4b4b4b;
 <div id="left-bar">
     <div id="description">
-        <h3 th:style="'color:'+${user.role.colour}+'; text-shadow: 0px 0px 5px '+${user.role.colour}+';'" th:text="${user.username}"></h3>
+        <h3 id="username" th:style="'color:'+${user.role.colour}+'; '+${user.role.colour}+';'">
+            <span th:if="${user.role.name == 'Administrator'}" th:text="${user.username}" class="admin"></span>
+            <span th:unless="${user.role.name == 'Administrator'}" th:text="${user.username}"></span>
+            <i id="editUsername" onclick="editUsername()" style="float: right;" th:if="${changeUsername == true}" class="fa fa-edit"></i>
+        </h3>
+        <form id="usernameInput" style="display:none;" method="POST">
+        <input type="text" name="newUsername" th:value="${user.username}"/>
+        </form>
         <h4 th:style="'color:'+${user.role.colour}+''" th:text="${user.role.name}"></h4>
     </div>
     <div id="profile" th:style="'background-image:url(' + ${user.profilePictureLocation} + ');'"></div>
@@ -45,7 +50,7 @@ text-shadow: 0px 0px 5px #4b4b4b;
     <div id="tab-buttons">
         <button class="tablinks" onclick="openTab(event, 'messages')">Message Board</button>
         <button class="tablinks" onclick="openTab(event, 'uploads')">Uploads</button>
-        <button th:if="${session.user != null && session.user.username== user.username}" class="tablinks" onclick="openTab(event, 'edit')">Edit Profile</button>
+        <button th:if="${session.user != null && user.username== user.username}" class="tablinks" onclick="openTab(event, 'edit')">Edit Profile</button>
     </div>
     <div id="tabs">
         <div id="messages" class="tabcontent" style="display: block;">
@@ -84,6 +89,15 @@ function openTab(evt, tabName) {
     tabcontent[i].style.display = "none";
   }
   document.getElementById(tabName).style.display = "block";
+}
+
+function editUsername(){
+    var usernameInput = document.getElementById("usernameInput");
+    var usernamePlaceholder = document.getElementById("username");
+    username.style.display="none";
+    usernameInput.style.display = "block";
+
+    console.log("HI");
 }
 </script>
 

@@ -28,7 +28,9 @@ public class HomeController {
     UserDatabaseService userDatabaseService = new UserDatabaseService();
 
     @GetMapping("/")
-    public String home() {
+    public String home(HttpServletRequest request) {
+            System.out.println(request.getHeader("user-agent"));
+
         return "index";
     }
 
@@ -44,10 +46,20 @@ public class HomeController {
 
 
     @GetMapping("/user/{username}")
-    public String userDetails(@PathVariable("username") String username, Model model){
+    public String userDetails(@PathVariable("username") String username, Model model, HttpSession session){
         try {
             User user = userDatabaseService.findUserByUsername(username);
-            System.out.println(user.getProfilePictureLocation());
+            Integer id = (Integer) session.getAttribute("user");
+            if (id != null) {
+                User thisUser = (User) userDatabaseService.findUserByID(id);
+                System.out.println(PermissionManager.hasChangeUsernamePermission(thisUser));
+                model.addAttribute("changeUsername",PermissionManager.hasChangeUsernamePermission(thisUser));
+                model.addAttribute("roleManagement",PermissionManager.hasChangeRoleManagementPermission(thisUser));
+                model.addAttribute("signedUser", thisUser);
+            }
+           else {
+                model.addAttribute("changeUsername",false);
+            }
             model.addAttribute("user", user);
             return "user";
         }
@@ -62,9 +74,13 @@ public class HomeController {
     public String newProject(Model model, HttpSession session){
         if(session.getAttribute("user") == null)
         {
+            model.addAttribute("user", null);
             return "redirect:/explore";
         }
+        int id = (int) session.getAttribute("user");
+        User user = userDatabaseService.findUserByID(id);
         model.addAttribute("upload", new Upload());
+        model.addAttribute("user",user);
         return "upload";
     }
 

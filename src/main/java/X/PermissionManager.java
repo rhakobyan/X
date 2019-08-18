@@ -16,6 +16,10 @@ public class PermissionManager {
         return hasPermission("control_panel", user);
     }
 
+    public static boolean hasChangeUsernamePermission(User user){ return hasPermission("change_username", user);}
+
+    public static boolean hasChangeRoleManagementPermission(User user) {return hasPermission("role_management", user);}
+
     public static boolean hasPermission(String permission, User user){
         ArrayList<Role> roles = user.getRoles();
         for (int i=0; i<roles.size(); i++){

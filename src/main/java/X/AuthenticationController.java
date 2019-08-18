@@ -56,7 +56,7 @@ public class AuthenticationController {
             try {
                 user = userDatabaseService.findUserByLogin(user.getUsername(), user.getPassword());
                 if (PermissionManager.hasLogInPermission(user)) {
-                    session.setAttribute("user", user);
+                    session.setAttribute("user", user.getID());
                     return "redirect:/explore";
                 }
                 else {

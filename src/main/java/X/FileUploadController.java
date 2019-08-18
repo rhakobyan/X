@@ -1,6 +1,7 @@
 package X;
 
 import java.io.IOException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,12 +44,19 @@ public class FileUploadController {
     }
 
     @GetMapping("/explore")
-    public String listUploadedFiles(Model model) throws IOException {
+    public String listUploadedFiles(HttpSession session, Model model) throws IOException {
 
        /*model.addAttribute("files", storageService.loadAll().map(
                 path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
                         "serveFile", path.getFileName().toString()).build().toString())
                 .collect(Collectors.toList()));*/
+        if(session.getAttribute("user") != null)
+        {
+            int id = (int) session.getAttribute("user");
+            User user = userDatabaseService.findUserByID(id);
+            model.addAttribute("user", user);
+        }
+
         List<Upload> uploads = uploadDatabaseService.loadAll();
         for (int i=0; i<uploads.size(); i++){
             uploads.get(i).setUsername(userDatabaseService.getUsernameByID(uploads.get(i).getUploaderID()));
@@ -71,7 +79,8 @@ public class FileUploadController {
     @PostMapping("/new-project")
     public String handleFileUpload(Upload upload, @RequestParam("file") MultipartFile file,
                                    RedirectAttributes redirectAttributes, HttpSession session) {
-        User user = (User) session.getAttribute("user");
+        int id = (int) session.getAttribute("user");
+        User user = userDatabaseService.findUserByID(id);
         upload.setUploaderID(user.getID());
         if(!PermissionManager.hasCreateProjectPermission(user)){
             redirectAttributes.addFlashAttribute("message", "You are not allowed to create a project!");
@@ -97,7 +106,7 @@ public class FileUploadController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/user/{username}")
+   /* @PostMapping("/user/{username}")
     public String usedUpdate(@RequestParam("file") MultipartFile file, HttpSession session){
         User user = (User) session.getAttribute("user");
         String filename = user.getUsername()+"-"+user.getID();
@@ -106,6 +115,17 @@ public class FileUploadController {
        filename = filename.replaceAll("\\s+","-");
         userDatabaseService.updateProfile(filename, user.getID());
         return "redirect:/";
+    }*/
+
+    @PostMapping("/user/{username}")
+    public String changeUsername(@RequestParam("newUsername") String newUsername, @PathVariable("username") String username){
+        try {
+            userDatabaseService.changeUsername(newUsername, username);
+        }
+        catch (Exception ex){
+            return "redirect:/user/"+username+"";
+        }
+        return "redirect:/user/"+newUsername+"";
     }
 
 }

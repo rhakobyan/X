@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -64,6 +65,24 @@ public class UserDatabaseService extends DatabaseService {
         throw new NoSuchUserException("User does not exist");
     }
 
+    public User findUserByID(int id){
+        String query = "SELECT * FROM user WHERE userID="+id+"";
+        User user = new User();
+        if (!jdbcTemplate.queryForList(query).isEmpty()) {
+            Map<String, Object> users = jdbcTemplate.queryForList(query).get(0);
+            user.generateFromMap(users);
+            String roleQuery = "SELECT * FROM Role INNER JOIN UserRole ON UserRole.roleID = Role.roleID WHERE userID = "+Integer.parseInt(users.get("userID").toString())+" ORDER BY priority;";
+            List<Map<String,Object>> roles = jdbcTemplate.queryForList(roleQuery);
+            for (int i=0; i<roles.size(); i++){
+                Role role = new Role();
+                role.generateFromMap(roles.get(i));
+                role.setPermissions(getPermissions(role.getId()));
+                user.addRole(role);
+            }
+        }
+        return user;
+    }
+
     public User findUserByLogin(String username, String password) throws NoSuchUserException {
         String query = "SELECT * FROM user WHERE username='"+username+"' AND password='"+password+"'";
         if (!jdbcTemplate.queryForList(query).isEmpty()) {
@@ -75,7 +94,6 @@ public class UserDatabaseService extends DatabaseService {
             for (int i=0; i<roles.size(); i++){
                 Role role = new Role();
                 role.generateFromMap(roles.get(i));
-                System.out.println(role.getName());
                 role.setPermissions(getPermissions(role.getId()));
                 user.addRole(role);
             }
@@ -109,5 +127,12 @@ public class UserDatabaseService extends DatabaseService {
         String query = "SELECT * FROM User;";
         List<Map<String, Object>> users= jdbcTemplate.queryForList(query);
         return users;
+    }
+
+    public void changeUsername(String newUsername, String oldUsername){
+            String query = "UPDATE "+TABLE_NAME+" SET username='"+newUsername+"' WHERE username='"+oldUsername+"'";
+            jdbcTemplate.execute(query);
+
+
     }
 }
