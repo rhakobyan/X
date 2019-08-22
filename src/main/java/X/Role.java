@@ -15,6 +15,8 @@ public class Role {
 
     private ArrayList<String> permissions;
 
+    private int priority;
+
     public Role(){
 
     }
@@ -51,10 +53,19 @@ public class Role {
         this.usernameColour = usernameColour;
     }
 
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
     public void generateFromMap(Map<String, Object> map){
         setId(Integer.parseInt(map.get("roleID").toString()));
         setName(map.get("name").toString());
         setColour(map.get("colour").toString());
+        setPriority(Integer.parseInt(map.get("priority").toString()));
     }
 
     public void setPermissions(ArrayList<String> permissions){

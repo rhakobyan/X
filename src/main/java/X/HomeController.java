@@ -17,30 +17,33 @@ import javax.validation.Valid;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 @Controller
 public class HomeController {
 
-    User thisUser;
+    @Autowired
+    HttpSession thisSession;
 
     @Autowired
     UserDatabaseService userDatabaseService = new UserDatabaseService();
 
     @GetMapping("/")
-    public String home(HttpServletRequest request) {
-            System.out.println(request.getHeader("user-agent"));
-
+    public String home(Model model) {
+        model.addAttribute("user", sessionUser());
         return "index";
     }
 
     @GetMapping("/about")
-    public String about(){
+    public String about(Model model){
+        model.addAttribute("user", sessionUser());
         return "about";
     }
 
     @GetMapping("/contact")
-    public String contact(){
+    public String contact(Model model){
+        model.addAttribute("user", sessionUser());
         return "contact";
     }
 
@@ -52,10 +55,15 @@ public class HomeController {
             Integer id = (Integer) session.getAttribute("user");
             if (id != null) {
                 User thisUser = (User) userDatabaseService.findUserByID(id);
-                System.out.println(PermissionManager.hasChangeUsernamePermission(thisUser));
-                model.addAttribute("changeUsername",PermissionManager.hasChangeUsernamePermission(thisUser));
+                System.out.println(PermissionManager.hasChangeRoleManagementPermission(thisUser));
+                boolean canChangeUsername = (PermissionManager.hasChangeUsernamePermission(thisUser) && (user.getRole().getPriority() >= thisUser.getRoles().get(0).getPriority()));
+                model.addAttribute("changeUsername",canChangeUsername);
                 model.addAttribute("roleManagement",PermissionManager.hasChangeRoleManagementPermission(thisUser));
                 model.addAttribute("signedUser", thisUser);
+                ArrayList<String> roles = userDatabaseService.getAllRoles();
+                ArrayList<String> userRoles = userDatabaseService.getUserRoles(user.getID());
+                model.addAttribute("roles", roles);
+                model.addAttribute("userRoles", userRoles);
             }
            else {
                 model.addAttribute("changeUsername",false);
@@ -84,4 +92,12 @@ public class HomeController {
         return "upload";
     }
 
+    private User sessionUser(){
+        if(thisSession.getAttribute("user")== null){
+            return null;
+        }
+        int id = (int) thisSession.getAttribute("user");
+        User user = (User) userDatabaseService.findUserByID(id);
+        return user;
+    }
 }

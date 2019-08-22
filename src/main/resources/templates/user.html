@@ -34,7 +34,7 @@
             <span th:unless="${user.role.name == 'Administrator'}" th:text="${user.username}"></span>
             <i id="editUsername" onclick="editUsername()" style="float: right;" th:if="${changeUsername == true}" class="fa fa-edit"></i>
         </h3>
-        <form id="usernameInput" style="display:none;" method="POST">
+        <form action="?changeUsername" id="usernameInput" style="display:none;" method="POST">
         <input type="text" name="newUsername" th:value="${user.username}"/>
         </form>
         <h4 th:style="'color:'+${user.role.colour}+''" th:text="${user.role.name}"></h4>
@@ -50,7 +50,8 @@
     <div id="tab-buttons">
         <button class="tablinks" onclick="openTab(event, 'messages')">Message Board</button>
         <button class="tablinks" onclick="openTab(event, 'uploads')">Uploads</button>
-        <button th:if="${session.user != null && user.username== user.username}" class="tablinks" onclick="openTab(event, 'edit')">Edit Profile</button>
+        <button th:if="${session.user != null && signedUser.username== user.username}" class="tablinks" onclick="openTab(event, 'edit')">Edit Profile</button>
+        <button th:if="${session.user != null && roleManagement == true}" class="tablinks" onclick="openTab(event, 'management')">Manage User</button>
     </div>
     <div id="tabs">
         <div id="messages" class="tabcontent" style="display: block;">
@@ -63,11 +64,28 @@
         </div>
 
         <div id="edit" class="tabcontent" style="display: none;">
-            <form method="POST" enctype="multipart/form-data">
-            <input type="file" name="file" id="file" />
+            <form action="?changeFile" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" id="file"/>
             <label id="file-label" for="file"><i id="upload-icon" class="fa fa-upload" aria-hidden="true"></i>Upload a Picture...</label>
             <input id="upload-submit" type="submit" value="Submit" />
             </form>
+        </div>
+
+        <div id="management" class="tabcontent">
+            <h3>Manage</h3>
+                <form action="?manageUser" method="POST">
+                    <select name="role">
+                <option th:each="role : ${roles}" th:value="${role}" th:text="${role}"></option>
+                    </select>
+                    <input type="submit" value="Submit" />
+                </form>
+            <form action="?removeRole" method="POST">
+                <select name="role">
+                    <option th:each="userRole : ${userRoles}" th:value="${userRole}" th:text="${userRole}"></option>
+                </select>
+                <input type="submit" value="Remove" />
+            </form>
+
         </div>
     </div>
 </div>
@@ -96,8 +114,6 @@ function editUsername(){
     var usernamePlaceholder = document.getElementById("username");
     username.style.display="none";
     usernameInput.style.display = "block";
-
-    console.log("HI");
 }
 </script>
 

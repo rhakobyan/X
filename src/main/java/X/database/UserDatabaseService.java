@@ -9,10 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class UserDatabaseService extends DatabaseService {
@@ -132,7 +129,53 @@ public class UserDatabaseService extends DatabaseService {
     public void changeUsername(String newUsername, String oldUsername){
             String query = "UPDATE "+TABLE_NAME+" SET username='"+newUsername+"' WHERE username='"+oldUsername+"'";
             jdbcTemplate.execute(query);
+    }
 
+    public ArrayList<String> getAllRoles(){
+        String query = "SELECT name FROM Role;";
+        List<Map<String, Object>> result = jdbcTemplate.queryForList(query);
+        ArrayList<String> roles = new ArrayList<>();
+        for (int i=0; i<result.size(); i++){
+            roles.add(result.get(i).get("name").toString());
+        }
 
+        return roles;
+    }
+    public ArrayList<String> getUserRoles(int userid){
+        String query1= "SELECT roleID FROM UserRole WHERE userID = "+userid+"";
+        String query = "SELECT name FROM Role WHERE roleID IN ("+query1+");";
+        List<Map<String, Object>> result = jdbcTemplate.queryForList(query);
+        ArrayList<String> roles = new ArrayList<>();
+        for (int i=0; i<result.size(); i++){
+            roles.add(result.get(i).get("name").toString());
+        }
+
+        return roles;
+    }
+
+    public void addRoleToUser(String username, String roleName){
+        int roleid = findRoleIDByName(roleName);
+        int userid = findUserIDByName(username);
+        String query = "INSERT INTO UserRole (roleID, userID) VALUES ("+roleid+", "+userid+")";
+        jdbcTemplate.execute(query);
+    }
+
+    public void removeRoleFromUser(String username, String roleName){
+        int roleid = findRoleIDByName(roleName);
+        int userid = findUserIDByName(username);
+        String query = "DELETE FROM UserRole WHERE roleID = "+roleid+" AND userID= "+userid+";";
+        jdbcTemplate.execute(query);
+    }
+
+    private int findRoleIDByName(String name){
+        String query = "SELECT roleID FROM Role WHERE name = '"+name+"'";
+        Integer id = jdbcTemplate.queryForObject(query, Integer.class);
+        return id;
+    }
+
+    private int findUserIDByName(String username){
+        String query = "SELECT userID FROM User WHERE username = '"+username+"'";
+        Integer id = jdbcTemplate.queryForObject(query, Integer.class);
+        return id;
     }
 }

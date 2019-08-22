@@ -106,18 +106,19 @@ public class FileUploadController {
         return ResponseEntity.notFound().build();
     }
 
-   /* @PostMapping("/user/{username}")
+   @PostMapping(path = "/user/{username}", params = "changeFile")
     public String usedUpdate(@RequestParam("file") MultipartFile file, HttpSession session){
-        User user = (User) session.getAttribute("user");
+        int id = (int) session.getAttribute("user");
+        User user = userDatabaseService.findUserByID(id);
         String filename = user.getUsername()+"-"+user.getID();
         storageService.store(file, user.getUsername()+"-"+user.getID());
         filename= filename+"-"+file.getOriginalFilename();
        filename = filename.replaceAll("\\s+","-");
         userDatabaseService.updateProfile(filename, user.getID());
         return "redirect:/";
-    }*/
+    }
 
-    @PostMapping("/user/{username}")
+    @PostMapping(path = "/user/{username}", params = "changeUsername")
     public String changeUsername(@RequestParam("newUsername") String newUsername, @PathVariable("username") String username){
         try {
             userDatabaseService.changeUsername(newUsername, username);
@@ -127,6 +128,20 @@ public class FileUploadController {
         }
         return "redirect:/user/"+newUsername+"";
     }
+
+    @PostMapping(path = "/user/{username}", params = "manageUser")
+    public String manage(@RequestParam("role") String role, @PathVariable("username") String username){
+        userDatabaseService.addRoleToUser(username, role);
+        return "redirect:/user/"+username+"";
+    }
+
+    @PostMapping(path = "/user/{username}", params = "removeRole")
+    public String removeRole(@RequestParam("role") String role, @PathVariable("username") String username){
+        userDatabaseService.removeRoleFromUser(username, role);
+        return "redirect:/user/"+username+"";
+    }
+
+
 
 }
 
