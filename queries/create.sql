@@ -13,15 +13,6 @@ CREATE TABLE Upload (
   ON UPDATE CASCADE
 );
 
-CREATE TABLE Tag (
-  tagID INT AUTO_INCREMENT,
-  name VARCHAR(20) NOT NULL UNIQUE,
-  description VARCHAR(1000) NOT NULL,
-  `usage` INT NOT NULL,
-  dateAdded DATE NOT NULL,
-  PRIMARY KEY (tagID)
-);
-
 CREATE TABLE Role (
   roleID INT AUTO_INCREMENT,
   name VARCHAR(25) NOT NULL UNIQUE,
@@ -98,3 +89,13 @@ INSERT INTO Permission(name, description) VALUES
 ("delete_user", "Can delete users");
 
 SELECT * FROM (SELECT name, priority, permissionID  FROM RolePermission INNER JOIN Role on Role.roleID = RolePermission.roleID) AS tbl INNER JOIN Permission on tbl.permissionID = Permission.permissionID;
+
+
+CREATE TABLE Tag(
+tagID INT AUTO_INCREMENT,
+name VARCHAR(20) NOT NULL,
+description VARCHAR(1000) NOT NULL,
+`usage` INT DEFAULT 0,
+dateAdded DATE NOT NULL,
+PRIMARY KEY(tagID)
+);

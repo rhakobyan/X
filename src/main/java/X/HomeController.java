@@ -1,6 +1,7 @@
 package X;
 
 
+import X.database.TagDatabaseService;
 import X.database.UserDatabaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -19,6 +20,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 public class HomeController {
@@ -28,6 +30,8 @@ public class HomeController {
 
     @Autowired
     UserDatabaseService userDatabaseService = new UserDatabaseService();
+    @Autowired
+    TagDatabaseService tagDatabaseService = new TagDatabaseService();
 
     @GetMapping("/")
     public String home(Model model) {
@@ -90,6 +94,14 @@ public class HomeController {
         model.addAttribute("upload", new Upload());
         model.addAttribute("user",user);
         return "upload";
+    }
+
+    @GetMapping("/tags")
+    public String tags(Model model){
+        model.addAttribute("user", sessionUser());
+        List<Tag> tags= tagDatabaseService.getAll();
+        model.addAttribute("tags", tags);
+        return "tags";
     }
 
     private User sessionUser(){
