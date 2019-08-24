@@ -46,6 +46,20 @@ public class UploadDatabaseService extends DatabaseService {
         return convertToUploadList(jdbcTemplate.queryForList(query));
     }
 
+    public List<Upload> loadLimitedResults(int limit){
+        String query = "SELECT * FROM " + TABLE_NAME +" ORDER BY rating DESC LIMIT " + limit+";";
+        return convertToUploadList(jdbcTemplate.queryForList(query));
+    }
+
+    public int numberOfRecords(){
+        String query = "SELECT COUNT(*) FROM "+TABLE_NAME+";";
+        Integer records = jdbcTemplate.queryForObject(query, Integer.class);
+        if (records != null) {
+            return records;
+        }
+        return 0;
+    }
+
     private List<Upload> convertToUploadList(List<Map<String, Object>> uploadsListMap){
         if (!uploadsListMap.isEmpty()) {
             List<Upload> uploadList= new ArrayList<>();

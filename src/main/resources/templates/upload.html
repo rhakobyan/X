@@ -41,6 +41,9 @@
             <textarea th:field="*{projectDescription}" style="border: 1px solid;" type="textarea" name="projectdesc" id="message" placeholder="Enter project description" required></textarea>
             <input type="file" name="file" id="file" onchange="rename()" />
             <label id="file-label" for="file"><i id="upload-icon" class="fa fa-upload" aria-hidden="true"></i>Upload a file...</label>
+
+            <label for="tags"><b>Tags</b></label>
+            <input type="text" placeholder="Add tags to your project" name="tags" required>
             <hr>
             <div style="margin: 0 auto; text-align: center;">
                 <button type="submit" class="proceed-button">Upload</button>

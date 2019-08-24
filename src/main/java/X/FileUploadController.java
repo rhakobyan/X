@@ -2,9 +2,11 @@ package X;
 
 import java.io.IOException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import X.database.TagDatabaseService;
 import X.database.UploadDatabaseService;
 import X.database.UserDatabaseService;
 import X.storage.StorageException;
@@ -38,6 +40,7 @@ public class FileUploadController {
     @Autowired
     private UserDatabaseService userDatabaseService = new UserDatabaseService();
 
+
     @Autowired
     public FileUploadController(StorageService storageService) {
         this.storageService = storageService;
@@ -56,14 +59,15 @@ public class FileUploadController {
             User user = userDatabaseService.findUserByID(id);
             model.addAttribute("user", user);
         }
-
-        List<Upload> uploads = uploadDatabaseService.loadAll();
+        int numberOfRecords = uploadDatabaseService.numberOfRecords();
+        int numberOfPages = (int) Math.ceil((double)numberOfRecords / 5);
+        model.addAttribute("pages", numberOfPages);
+        List<Upload> uploads = uploadDatabaseService.loadLimitedResults(5);
         for (int i=0; i<uploads.size(); i++){
             uploads.get(i).setUsername(userDatabaseService.getUsernameByID(uploads.get(i).getUploaderID()));
         }
-           model.addAttribute("projects", uploads);
-           //model.addAttribute("projectUserName", uploadDatabaseService.getUserNameByID())
-
+        model.addAttribute("projects", uploads);
+        //System.out.println();
         return "explore";
     }
 
@@ -77,7 +81,7 @@ public class FileUploadController {
     }
 
     @PostMapping("/new-project")
-    public String handleFileUpload(Upload upload, @RequestParam("file") MultipartFile file,
+    public String handleFileUpload(Upload upload, @RequestParam("file") MultipartFile file, @RequestParam("tags") String tags,
                                    RedirectAttributes redirectAttributes, HttpSession session) {
         int id = (int) session.getAttribute("user");
         User user = userDatabaseService.findUserByID(id);
@@ -89,6 +93,7 @@ public class FileUploadController {
         try {
             storageService.store(file, upload.getProjectName()+"-"+user.getID());
             upload.setFileName(upload.getProjectName()+"-"+user.getID()+"-"+file.getOriginalFilename());
+            List<String> tagList = Arrays.asList(tags.split("\\s*,\\s*"));
             uploadDatabaseService.insert(upload);
             redirectAttributes.addFlashAttribute("message",
                     "You successfully uploaded " + upload.getFileName() + "!");
@@ -113,7 +118,7 @@ public class FileUploadController {
         String filename = user.getUsername()+"-"+user.getID();
         storageService.store(file, user.getUsername()+"-"+user.getID());
         filename= filename+"-"+file.getOriginalFilename();
-       filename = filename.replaceAll("\\s+","-");
+        filename = filename.replaceAll("\\s+","-");
         userDatabaseService.updateProfile(filename, user.getID());
         return "redirect:/";
     }
