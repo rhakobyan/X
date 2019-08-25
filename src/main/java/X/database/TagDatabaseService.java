@@ -39,12 +39,25 @@ public class TagDatabaseService extends DatabaseService {
     public List<Tag> getAll(){
         String query = "SELECT * FROM "+TABLE_NAME+" ORDER BY `usage` DESC;";
         List<Map<String, Object>> tagMap = jdbcTemplate.queryForList(query);
+        return convertToTagList(tagMap);
+    }
+
+    public List<Tag> loadLimitedResults(int limit, int offset){
+        String query = "SELECT * FROM " + TABLE_NAME +" ORDER BY `usage` DESC LIMIT " + limit+" OFFSET "+offset+";";
+        return convertToTagList(jdbcTemplate.queryForList(query));
+    }
+
+    public int numberOfRecords(){
+        return super.numberOfRecords(TABLE_NAME);
+    }
+
+    private List<Tag> convertToTagList(List<Map<String, Object>> tagsListMap){
         ArrayList<Tag> tags = new ArrayList<>();
-            for (int i = 0; i < tagMap.size(); i++) {
-                Tag tag = new Tag();
-                tag.generateFromMap(tagMap.get(i));
-                tags.add(tag);
-            }
-            return tags;
+        for (int i = 0; i < tagsListMap.size(); i++) {
+            Tag tag = new Tag();
+            tag.generateFromMap(tagsListMap.get(i));
+            tags.add(tag);
+        }
+        return tags;
     }
 }

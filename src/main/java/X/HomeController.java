@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.SimpleDateFormat;
@@ -97,9 +98,19 @@ public class HomeController {
     }
 
     @GetMapping("/tags")
-    public String tags(Model model){
+    public String firstTagsPage(Model model) {
+        return tags(model, 1);
+    }
+
+    @GetMapping(path = "/tags", params = "page")
+    public String tags(Model model, @RequestParam("page") int page){
+        int limit = 40;
+
         model.addAttribute("user", sessionUser());
-        List<Tag> tags= tagDatabaseService.getAll();
+        int numberOfRecords = tagDatabaseService.numberOfRecords();
+        int numberOfPages = (int) Math.ceil((double)numberOfRecords / limit);
+        model.addAttribute("pages", numberOfPages);
+        List<Tag> tags= tagDatabaseService.loadLimitedResults(limit, limit*(page-1));
         model.addAttribute("tags", tags);
         return "tags";
     }

@@ -48,7 +48,7 @@
     </div>
 
     <div class="pager">
-        <a href="/explore"> <span class="page-numbers"></span> </a>
+        <a th:each="i: ${#numbers.sequence(1, pages)}" th:href="@{/explore?page={number}(number=${i})}"> <span class="page-numbers" th:text="${i}"></span> </a>
     </div>
 </header>
 

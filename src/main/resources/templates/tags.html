@@ -49,6 +49,11 @@
 
 
     </div>
+
+    <div class="pager">
+        <a th:each="i: ${#numbers.sequence(1, pages)}" th:href="@{/tags?page={number}(number=${i})}"> <span class="page-numbers" th:text="${i}"></span> </a>
+    </div>
+
 </header>
 
 <!-- Footer -->

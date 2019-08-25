@@ -47,8 +47,13 @@ public class FileUploadController {
     }
 
     @GetMapping("/explore")
-    public String listUploadedFiles(HttpSession session, Model model) throws IOException {
+    public String firstExplorePage(HttpSession session, Model model) throws  IOException{
+        return listUploadedFiles(session, model, 1);
+    }
 
+    @GetMapping(path = "/explore", params="page")
+    public String listUploadedFiles(HttpSession session, Model model, @RequestParam("page") int page) throws IOException {
+        final int limit = 20;
        /*model.addAttribute("files", storageService.loadAll().map(
                 path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
                         "serveFile", path.getFileName().toString()).build().toString())
@@ -60,9 +65,9 @@ public class FileUploadController {
             model.addAttribute("user", user);
         }
         int numberOfRecords = uploadDatabaseService.numberOfRecords();
-        int numberOfPages = (int) Math.ceil((double)numberOfRecords / 5);
+        int numberOfPages = (int) Math.ceil((double)numberOfRecords / limit);
         model.addAttribute("pages", numberOfPages);
-        List<Upload> uploads = uploadDatabaseService.loadLimitedResults(5);
+        List<Upload> uploads = uploadDatabaseService.loadLimitedResults(limit, limit*(page-1));
         for (int i=0; i<uploads.size(); i++){
             uploads.get(i).setUsername(userDatabaseService.getUsernameByID(uploads.get(i).getUploaderID()));
         }
