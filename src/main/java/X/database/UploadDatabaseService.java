@@ -1,5 +1,6 @@
 package X.database;
 
+import X.Tag;
 import X.Upload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,6 +17,8 @@ public class UploadDatabaseService extends DatabaseService {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
+    @Autowired
+    TagDatabaseService tagDatabaseService = new TagDatabaseService();
 
     private final String TABLE_NAME = "Upload";
 
@@ -33,6 +36,12 @@ public class UploadDatabaseService extends DatabaseService {
                 "('"+upload.getProjectName()+"', '"+upload.getProjectDescription()+"', 'upload-dir/projects', '"+upload.getFileName()+"'" +
                 ", '"+formatter.format(date)+"', '"+upload.getUploaderID()+"')";
         jdbcTemplate.execute(query);
+        String getUploadID = "SELECT uploadID from Upload WHERE projectName='"+upload.getProjectName()+"'";
+        Integer id = jdbcTemplate.queryForObject(getUploadID, Integer.class);
+        for (int i=0; i<upload.getTagsList().size(); i++) {
+            String addTag = "INSERT INTO UploadTag(uploadID, tagID) VALUES("+id+ "," + upload.getTagsList().get(i).getId() + ")";
+            jdbcTemplate.execute(addTag);
+        }
     }
 
     public boolean exists(Object object) {
@@ -62,6 +71,12 @@ public class UploadDatabaseService extends DatabaseService {
                Map<String, Object> uploadMap = uploadsListMap.get(i);
                Upload upload = new Upload();
                upload.generateFromMap(uploadMap);
+               String query = "SELECT tagID FROM UploadTag WHERE uploadID = "+upload.getUploadID()+";";
+               List<Map<String, Object>> uploadTagList = jdbcTemplate.queryForList(query);
+               for (int j =0; j<uploadTagList.size(); j++){
+                   Tag tag = tagDatabaseService.get(Integer.parseInt(uploadTagList.get(j).get("tagID").toString()));
+                   upload.addTag(tag);
+               }
                uploadList.add(upload);
            }
            return uploadList;

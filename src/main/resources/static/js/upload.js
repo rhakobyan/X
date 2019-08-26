@@ -67,6 +67,31 @@ function autocomplete(inp, arr) {
                  inp.value = this.getElementsByTagName("input")[0].value;
                  /*close the list of autocompleted values,
                  (or any other open lists of autocompleted values:*/
+                if(!document.getElementById("tags").value.includes(tagsInputVar.value))
+                {
+                warn.style.display = "none";
+                document.getElementById("tags").value += this.getElementsByTagName("input")[0].value.trim() + " ";
+                var sp = document.createElement("span");
+                sp.setAttribute("class", "tag-link");
+                var closeSp = document.createElement("i");
+                closeSp.setAttribute("class", "fa fa-times-circle-o closeTag");
+                sp.innerHTML = this.getElementsByTagName("input")[0].value.trim();
+                var vall = this.getElementsByTagName("input")[0].value.trim();
+                closeSp.addEventListener("click", function(){
+                    var tags = document.getElementById("tags");
+                    console.log(vall);
+                    tags.value = tags.value.replace(vall, '');
+                    sp.remove();
+                });
+                document.getElementById("tagsContainer").insertBefore(sp, document.getElementById("addTag"));
+                sp.append(closeSp);
+                tagsInputVar.value = "";
+                document.getElementById("myModal").style.display = "none";
+                }
+                else{
+                warn.style.display = "block";
+                   tagsInputVar.value = "";
+                }
                  closeAllLists();
              });
              a.appendChild(b);
@@ -167,22 +192,7 @@ var modala = document.getElementsByClassName("modal-content")[0];
 modala.appendChild(warn);
 tagsInput.addEventListener("keyup", function(event){
 if (event.keyCode === 13) {
-        if(!document.getElementById("tags").value.includes(tagsInputVar.value))
-        {
-        warn.style.display = "none";
-        if(document.getElementById("tags").value != ""){
-        document.getElementById("tags").value += ", "+tagsInputVar.value;
-        }
-        else{
-        document.getElementById("tags").value += tagsInputVar.value;
-        }
-        tagsInputVar.value = "";
-        modal.style.display = "none";
-        }
-        else{
-        warn.style.display = "block";
-           tagsInputVar.value = "";
-        }
+
     }
 });
 

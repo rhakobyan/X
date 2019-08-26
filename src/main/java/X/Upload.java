@@ -1,5 +1,6 @@
 package X;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class Upload {
@@ -11,6 +12,7 @@ public class Upload {
     private String dateAdded;
     private int rating;
     private int uploaderID;
+    private ArrayList<Tag> tagsList = new ArrayList<>();
 
     private String username;
 
@@ -91,6 +93,18 @@ public class Upload {
 
     public int getUploaderID() {
         return uploaderID;
+    }
+
+    public ArrayList<Tag> getTagsList() {
+        return tagsList;
+    }
+
+    public void setTagsList(ArrayList<Tag> tags) {
+        this.tagsList = tags;
+    }
+
+    public void addTag(Tag tag){
+        tagsList.add(tag);
     }
 
     public void generateFromMap(Map<String, Object> map){

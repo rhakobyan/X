@@ -39,6 +39,8 @@ public class FileUploadController {
     private UploadDatabaseService uploadDatabaseService = new UploadDatabaseService();
     @Autowired
     private UserDatabaseService userDatabaseService = new UserDatabaseService();
+    @Autowired
+    private TagDatabaseService tagDatabaseService = new TagDatabaseService();
 
 
     @Autowired
@@ -98,7 +100,17 @@ public class FileUploadController {
         try {
             storageService.store(file, upload.getProjectName()+"-"+user.getID());
             upload.setFileName(upload.getProjectName()+"-"+user.getID()+"-"+file.getOriginalFilename());
-            List<String> tagList = Arrays.asList(tags.split("\\s*,\\s*"));
+            String cleanTags = tags.trim().replaceAll("( +)", " ");
+            String[] tagList = cleanTags.split(" ");
+            for (int i = 0; i<tagList.length; i++) {
+                if (!tagDatabaseService.isTag(tagList[i])) {
+                    return "upload";
+                }
+                Tag tag = tagDatabaseService.get(tagList[i]);
+                upload.addTag(tag);
+                tag.setUsage(tag.getUsage()+1);
+                tagDatabaseService.increaseUsage(tag);
+            }
             uploadDatabaseService.insert(upload);
             redirectAttributes.addFlashAttribute("message",
                     "You successfully uploaded " + upload.getFileName() + "!");

@@ -42,6 +42,21 @@ public class TagDatabaseService extends DatabaseService {
         return convertToTagList(tagMap);
     }
 
+    public Tag get(String tagName){
+        String query = "SELECT * FROM "+TABLE_NAME+" WHERE name = '"+tagName+"';";
+        Map<String, Object> queryMap = jdbcTemplate.queryForMap(query);
+        Tag tag = new Tag();
+        tag.generateFromMap(queryMap);
+        return tag;
+    }
+    public Tag get(int tagID){
+        String query = "SELECT * FROM "+TABLE_NAME+" WHERE tagID = "+tagID+";";
+        Map<String, Object> queryMap = jdbcTemplate.queryForMap(query);
+        Tag tag = new Tag();
+        tag.generateFromMap(queryMap);
+        return tag;
+    }
+
     public List<Tag> loadLimitedResults(int limit, int offset){
         String query = "SELECT * FROM " + TABLE_NAME +" ORDER BY `usage` DESC LIMIT " + limit+" OFFSET "+offset+";";
         return convertToTagList(jdbcTemplate.queryForList(query));
@@ -69,5 +84,15 @@ public class TagDatabaseService extends DatabaseService {
             tags.add(tag);
         }
         return tags;
+    }
+
+    public boolean isTag(String tagname){
+        String query = "SELECT name FROM "+TABLE_NAME+" WHERE name='"+tagname+"';";
+        return !jdbcTemplate.queryForList(query).isEmpty();
+    }
+
+    public void increaseUsage(Tag tag){
+        String query = "UPDATE Tag Set `usage` = "+tag.getUsage()+" WHERE tagID = "+tag.getId()+"";
+        jdbcTemplate.execute(query);
     }
 }
