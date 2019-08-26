@@ -115,6 +115,14 @@ public class HomeController {
         return "tags";
     }
 
+    @GetMapping("/autocompleteTags")
+    @ResponseBody
+    public String vzu(@RequestParam("value") String value){
+        int limit = 5;
+        List<String> tags= tagDatabaseService.loadLimitedAutocompleteResults(limit, value);
+        return tags.toString();
+    }
+
     private User sessionUser(){
         if(thisSession.getAttribute("user")== null){
             return null;

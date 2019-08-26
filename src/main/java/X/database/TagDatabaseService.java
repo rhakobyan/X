@@ -47,6 +47,16 @@ public class TagDatabaseService extends DatabaseService {
         return convertToTagList(jdbcTemplate.queryForList(query));
     }
 
+    public List<String> loadLimitedAutocompleteResults(int limit, String patter){
+        String query = "SELECT name FROM " + TABLE_NAME +" WHERE name LIKE '%"+patter+"%' ORDER BY `usage` DESC LIMIT " + limit+";";
+        List<Map<String, Object>> tagsMap = jdbcTemplate.queryForList(query);
+        ArrayList<String> tags = new ArrayList<>();
+        for (int i =0; i<tagsMap.size(); i++){
+            tags.add(tagsMap.get(i).get("name").toString());
+        }
+        return tags;
+    }
+
     public int numberOfRecords(){
         return super.numberOfRecords(TABLE_NAME);
     }
