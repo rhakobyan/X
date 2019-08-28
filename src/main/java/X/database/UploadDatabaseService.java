@@ -2,6 +2,7 @@ package X.database;
 
 import X.Tag;
 import X.Upload;
+import X.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,8 @@ public class UploadDatabaseService extends DatabaseService {
     JdbcTemplate jdbcTemplate;
     @Autowired
     TagDatabaseService tagDatabaseService = new TagDatabaseService();
+    @Autowired
+    UserDatabaseService userDatabaseService  = new UserDatabaseService();
 
     private final String TABLE_NAME = "Upload";
 
@@ -64,6 +67,22 @@ public class UploadDatabaseService extends DatabaseService {
         return super.numberOfRecords(TABLE_NAME);
     }
 
+    public Upload load(String projectName){
+        String query = "SELECT * FROM " + TABLE_NAME +" WHERE projectName = '"+projectName+"';";
+        Map<String, Object> uploadMap= jdbcTemplate.queryForMap(query);
+        Upload upload = new Upload();
+        upload.generateFromMap(uploadMap);
+        String tagQuery = "SELECT tagID FROM UploadTag WHERE uploadID = "+upload.getUploadID()+";";
+        List<Map<String, Object>> uploadTagList = jdbcTemplate.queryForList(tagQuery);
+        for (int j =0; j<uploadTagList.size(); j++){
+            Tag tag = tagDatabaseService.get(Integer.parseInt(uploadTagList.get(j).get("tagID").toString()));
+            upload.addTag(tag);
+        }
+
+        User user = userDatabaseService.findUserByID(upload.getUploaderID());
+        upload.setUser(user);
+        return upload;
+    }
     private List<Upload> convertToUploadList(List<Map<String, Object>> uploadsListMap){
         if (!uploadsListMap.isEmpty()) {
             List<Upload> uploadList= new ArrayList<>();

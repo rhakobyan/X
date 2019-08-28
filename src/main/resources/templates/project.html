@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<title>devix</title>
+<meta charset="UTF-8">
+<!--<meta name="viewport" content="width=device-width, initial-scale=1"> -->
+<link rel="stylesheet" href="/css/xstyle.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<body>
+
+<!-- Navbar (sit on top) -->
+<div id="container-navbar">
+    <div id="navbar">
+        <a href="/" id="logo"class="bar-item"><span style="color: #192b3b">dev</span><span style="color: #b43636">i</span><span style="color: #192b3b">x</span></a>
+        <!-- Right-sided navbar links -->
+        <div id="right-bar">
+            <a href="/about"  th:if="${session.user == null}" class="bar-item">About</a>
+            <a th:if="${session.user != null}" class="bar-item" href="/new-project">Add project</a>
+
+
+            <a href="/contact" th:if="${session.user == null}" class="bar-item">Contact</a>
+            <a href="/explore" th:if="${session.user != null}" class="bar-item">Explore</a>
+
+            <a href="/register" th:if="${session.user == null}" class="bar-item">Sign Up</i></a>
+            <a th:href="@{/user/{username}(username=${user.username})}" th:unless="${session.user == null}" th:text=${user.username} class="bar-item"></i></a>
+        </div>
+    </div>
+</div>
+
+
+<!-- Header with full-height image -->
+<header style=" margin-top: 60px; min-height: 100%;">
+    <div style="">
+        <div id="cover">
+        </div>
+        <div id="projInfo">
+            <div style="display: inline-block;">
+                <span id="projName" th:text="${project.projectName}"></span>
+            </div>
+            <div style="display: inline-block; float:right; margin-top:25px; margin-right:5px;">
+      <span class="action-buttons">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </span>
+                <span class="action-buttons">
+      <i class="fa fa-arrow-down" aria-hidden="true"></i>
+    </span>
+                <a class="action-buttons" th:href="@{/files/{fileName}(fileName=${project.fileName})}">
+      <i class="fa fa-download" aria-hidden="true"></i>
+    </a>
+            </div>
+        </div>
+        <hr style="margin: 0">
+        <div id="projectDesc">
+            <h5>Project Description</h5>
+            <div id="projectDescText">
+            <p th:text="${project.projectDescription}"></p>
+            </div>
+
+            </div>
+        <div id="projectDetails">
+            <h5 style="text-align: right;">Project Details</h5>
+            <div style="border: 3px solid #192b3b;
+   border-radius: 5px;
+   padding: 5px;">
+                <p>Uploaded By: <a th:style="'color:'+${project.user.roles.get(0).colour}+''" th:href="@{/user/{username}(username=${project.user.username})}">
+                    <span th:if="${project.user.roles.get(0).name == 'Administrator'}" th:text="${project.user.username}"  class="admin"></span>
+                    <span th:unless="${project.user.roles.get(0).name == 'Administrator'}" th:text="${project.user.username}"></span></a></p>
+                <p>Rating: <span th:text="${project.rating}"></span></p>
+                <p>Uploaded On: <span th:text="${project.dateAdded}"></span></p>
+                <p>Tags:</p> <div style="">
+                <span th:each="tag : ${project.tagsList}" class="tag-link" th:text="${tag.name}"></span>
+            </div>
+            </div>
+
+        </div>
+    </div>
+    <div id="projReview">
+        <h4>Reviews</h4>
+        <textarea id="message" placeholder="Write a Review"></textarea>
+    </div>
+</header>
+
+<!-- Footer -->
+<footer id="footer">
+    <div id="footer-container" style="text-align: center;">
+        <i class="fa fa-twitter x-hover-opacity"></i>
+        <i class="fa fa-facebook-official x-hover-opacity"></i>
+        <i class="fa fa-instagram x-hover-opacity"></i>
+    </div>
+</footer>
+
+</body>
+</html>

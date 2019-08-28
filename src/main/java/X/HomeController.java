@@ -123,6 +123,7 @@ public class HomeController {
         return tags.toString();
     }
 
+
     private User sessionUser(){
         if(thisSession.getAttribute("user")== null){
             return null;

@@ -35,7 +35,7 @@
     <div class="grid-container">
         <div class="grid-item" th:each = "project : ${projects}">
             <div id="firstSection">
-                <a th:href="@{/user/{username}(username=${project.username})}" th:text="${project.username}"></a>-<a href="#"><b th:text="${project.projectName}"></b></a></div>
+                <a th:href="@{/user/{username}(username=${project.username})}" th:text="${project.username}"></a>-<a th:href="@{/project/{projectName}(projectName=${project.projectName})}"><b th:text="${project.projectName}"></b></a></div>
             <div style="color: #7e8c65; float: right;">
                 <i class="fa fa-star"></i><span style="margin-left: 2px;" th:text="${project.rating}"></span>
             </div>

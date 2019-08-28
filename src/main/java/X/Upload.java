@@ -16,6 +16,8 @@ public class Upload {
 
     private String username;
 
+    private User user = new User();
+
     public String getUsername() {
         return username;
     }
@@ -101,6 +103,14 @@ public class Upload {
 
     public void setTagsList(ArrayList<Tag> tags) {
         this.tagsList = tags;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void addTag(Tag tag){
