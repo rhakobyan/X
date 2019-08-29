@@ -5,10 +5,7 @@ import X.database.UserDatabaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -63,6 +60,23 @@ public class UploadController {
         model.addAttribute("project", upload);
         return "project";
     }
+
+    @PostMapping(path = "/project/{projectName}", params = "vote")
+    @ResponseBody
+    public String upVote(@PathVariable("projectName") String projectName, @RequestParam("vote") boolean vote){
+        User user = sessionUser();
+        if (user != null) {
+            try {
+                uploadDatabaseService.vote(projectName, user.getID(), vote);
+                return "voted";
+            }catch (Exception ex){
+                return "notVoted";
+            }
+
+        }
+        return "cantVote";
+    }
+
 
     private User sessionUser(){
         if(thisSession.getAttribute("user")== null){

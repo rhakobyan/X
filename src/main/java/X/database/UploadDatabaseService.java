@@ -4,9 +4,12 @@ import X.Tag;
 import X.Upload;
 import X.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -82,6 +85,31 @@ public class UploadDatabaseService extends DatabaseService {
         User user = userDatabaseService.findUserByID(upload.getUploaderID());
         upload.setUser(user);
         return upload;
+    }
+
+    public void vote(String projectName, int userID, boolean positive) throws Exception{
+        String getUploadId = "SELECT uploadID FROM "+TABLE_NAME+" WHERE projectName = '"+projectName+"'";
+        Integer id = jdbcTemplate.queryForObject(getUploadId, Integer.class);
+        System.out.println("HERE");
+            String votedQuery = "SELECT positive FROM VotesCast WHERE userID="+userID+" AND uploadID="+id+"";
+            if (jdbcTemplate.queryForList(votedQuery).isEmpty()) {
+                String voteQuery = "INSERT INTO VotesCast(uploadID, userID, positive) VALUES(" + id + "," + userID + "," + positive + ")";
+                jdbcTemplate.execute(voteQuery);
+            }
+            else {
+                Boolean voteType = jdbcTemplate.queryForObject(votedQuery, Boolean.class);
+                if(voteType != null) {
+                    if ((voteType && !positive) || (!voteType && positive)) {
+                        String updateQuery = "UPDATE VotesCast SET positive=" + positive + " WHERE uploadID=" + id + " AND userID=" + userID + ";";
+                        jdbcTemplate.execute(updateQuery);
+                    } else {
+                        throw new Exception("Already voted");
+                    }
+                }
+            }
+            int n = positive ? 1:-1;
+            String voteCount = "UPDATE Upload SET rating = rating+"+n+" WHERE uploadID = "+id+"";
+            jdbcTemplate.execute(voteCount);
     }
     private List<Upload> convertToUploadList(List<Map<String, Object>> uploadsListMap){
         if (!uploadsListMap.isEmpty()) {
