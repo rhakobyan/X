@@ -36,6 +36,9 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model) {
+        if(sessionUser() != null){
+            return "redirect:/explore";
+        }
         model.addAttribute("user", sessionUser());
         return "index";
     }

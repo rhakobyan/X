@@ -141,6 +141,7 @@ public class UserDatabaseService extends DatabaseService {
 
         return roles;
     }
+
     public ArrayList<String> getUserRoles(int userid){
         String query1= "SELECT roleID FROM UserRole WHERE userID = "+userid+"";
         String query = "SELECT name FROM Role WHERE roleID IN ("+query1+");";
@@ -164,6 +165,11 @@ public class UserDatabaseService extends DatabaseService {
         int roleid = findRoleIDByName(roleName);
         int userid = findUserIDByName(username);
         String query = "DELETE FROM UserRole WHERE roleID = "+roleid+" AND userID= "+userid+";";
+        jdbcTemplate.execute(query);
+    }
+
+    public void updateReputation(int userID, int amount){
+        String query = "UPDATE User SET reputation = reputation+"+amount+" WHERE userID = "+userID+";";
         jdbcTemplate.execute(query);
     }
 

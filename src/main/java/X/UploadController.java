@@ -58,6 +58,22 @@ public class UploadController {
         model.addAttribute("user",user);
         Upload upload = uploadDatabaseService.load(projectName);
         model.addAttribute("project", upload);
+        String upVotedClass = "action-buttons";
+        String downVotedClass = "action-buttons";
+        if(user!=null) {
+            if(uploadDatabaseService.hasUpVoted(projectName, user.getID()))
+            {
+                upVotedClass = "already-voted";
+            }
+            else if(uploadDatabaseService.hasDownVoted(projectName, user.getID())){
+                downVotedClass = "already-voted";
+            }
+        }
+
+            model.addAttribute("upVoted", upVotedClass);
+            model.addAttribute("downVoted", downVotedClass);
+
+
         return "project";
     }
 
@@ -66,12 +82,11 @@ public class UploadController {
     public String upVote(@PathVariable("projectName") String projectName, @RequestParam("vote") boolean vote){
         User user = sessionUser();
         if (user != null) {
-            try {
+            if(!vote && !PermissionManager.hasDownVotePermission(user)){
+                return "CantDownVote";
+            }
                 uploadDatabaseService.vote(projectName, user.getID(), vote);
                 return "voted";
-            }catch (Exception ex){
-                return "notVoted";
-            }
 
         }
         return "cantVote";

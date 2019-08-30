@@ -38,16 +38,20 @@
                 <span id="projName" th:text="${project.projectName}"></span>
             </div>
             <div style="display: inline-block; float:right; margin-top:25px;">
-                  <span class="action-buttons" id="upVote" onclick="vote(true)">
+                  <span th:class="${upVoted}" id="upVote" onclick="vote(true)">
                   <i class="fa fa-arrow-up" aria-hidden="true"></i>
                 </span>
-                <span id="downVote" class="action-buttons" onclick="vote(false)">
+                <span id="downVote" th:class="${downVoted}" onclick="vote(false)">
       <i class="fa fa-arrow-down" aria-hidden="true"></i>
     </span>
                 <a class="action-buttons"  th:href="@{/files/{fileName}(fileName=${project.fileName})}">
       <i class="fa fa-download" aria-hidden="true"></i>
     </a>
-                <span id="voteMessage"></span>
+
+            </div>
+            <div id="voteDiv" style="display:none; float:right;">
+                <br>
+            <span id="voteMessage" style="color: red;"></span>
             </div>
         </div>
         <hr style="margin: 0">

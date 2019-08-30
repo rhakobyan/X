@@ -20,6 +20,8 @@ public class PermissionManager {
 
     public static boolean hasChangeRoleManagementPermission(User user) {return hasPermission("role_management", user);}
 
+    public static boolean hasDownVotePermission(User user) {return hasPermission("downvote", user);}
+
     public static boolean hasPermission(String permission, User user){
         ArrayList<Role> roles = user.getRoles();
         for (int i=0; i<roles.size(); i++){

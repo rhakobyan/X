@@ -87,14 +87,15 @@ public class UploadDatabaseService extends DatabaseService {
         return upload;
     }
 
-    public void vote(String projectName, int userID, boolean positive) throws Exception{
+    public void vote(String projectName, int userID, boolean positive){
+        int n =0;
         String getUploadId = "SELECT uploadID FROM "+TABLE_NAME+" WHERE projectName = '"+projectName+"'";
         Integer id = jdbcTemplate.queryForObject(getUploadId, Integer.class);
-        System.out.println("HERE");
             String votedQuery = "SELECT positive FROM VotesCast WHERE userID="+userID+" AND uploadID="+id+"";
             if (jdbcTemplate.queryForList(votedQuery).isEmpty()) {
                 String voteQuery = "INSERT INTO VotesCast(uploadID, userID, positive) VALUES(" + id + "," + userID + "," + positive + ")";
                 jdbcTemplate.execute(voteQuery);
+                n = positive ? 1:-1;
             }
             else {
                 Boolean voteType = jdbcTemplate.queryForObject(votedQuery, Boolean.class);
@@ -102,15 +103,46 @@ public class UploadDatabaseService extends DatabaseService {
                     if ((voteType && !positive) || (!voteType && positive)) {
                         String updateQuery = "UPDATE VotesCast SET positive=" + positive + " WHERE uploadID=" + id + " AND userID=" + userID + ";";
                         jdbcTemplate.execute(updateQuery);
+                         n = positive ? 2:-2;
                     } else {
-                        throw new Exception("Already voted");
+                        String updateQuery = "DELETE FROM VotesCast WHERE uploadID=" + id + " AND userID=" + userID + ";";
+                        jdbcTemplate.execute(updateQuery);
+                        positive = !positive;
+                        n = positive ? 1:-1;
                     }
                 }
             }
-            int n = positive ? 1:-1;
             String voteCount = "UPDATE Upload SET rating = rating+"+n+" WHERE uploadID = "+id+"";
             jdbcTemplate.execute(voteCount);
+        String getUploaderId = "SELECT uploaderID FROM "+TABLE_NAME+" WHERE projectName = '"+projectName+"'";
+        Integer uploaderID = jdbcTemplate.queryForObject(getUploaderId, Integer.class);
+        if(uploaderID!=null) {
+            userDatabaseService.updateReputation(uploaderID, (5 * n));
+        }
     }
+
+    public boolean hasUpVoted(String projectName, int userID){
+        String getUploadId = "SELECT uploadID FROM "+TABLE_NAME+" WHERE projectName = '"+projectName+"'";
+        Integer id = jdbcTemplate.queryForObject(getUploadId, Integer.class);
+        String votedQuery = "SELECT positive FROM VotesCast WHERE userID="+userID+" AND uploadID="+id+"";
+         if(!jdbcTemplate.queryForList(votedQuery).isEmpty()){
+             Boolean voteKind = jdbcTemplate.queryForObject(votedQuery, Boolean.class);
+             return voteKind;
+         }
+         return false;
+    }
+
+    public boolean hasDownVoted(String projectName, int userID){
+        String getUploadId = "SELECT uploadID FROM "+TABLE_NAME+" WHERE projectName = '"+projectName+"'";
+        Integer id = jdbcTemplate.queryForObject(getUploadId, Integer.class);
+        String votedQuery = "SELECT positive FROM VotesCast WHERE userID="+userID+" AND uploadID="+id+"";
+        if(!jdbcTemplate.queryForList(votedQuery).isEmpty()){
+            Boolean voteKind = jdbcTemplate.queryForObject(votedQuery, Boolean.class);
+            return !voteKind;
+        }
+        return false;
+    }
+
     private List<Upload> convertToUploadList(List<Map<String, Object>> uploadsListMap){
         if (!uploadsListMap.isEmpty()) {
             List<Upload> uploadList= new ArrayList<>();
