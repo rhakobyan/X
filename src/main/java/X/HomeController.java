@@ -126,6 +126,12 @@ public class HomeController {
         return tags.toString();
     }
 
+    @GetMapping("/log-out")
+    public String logOut(){
+        thisSession.invalidate();
+        return "redirect:/";
+    }
+
 
     private User sessionUser(){
         if(thisSession.getAttribute("user")== null){

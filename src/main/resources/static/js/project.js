@@ -28,6 +28,7 @@ function vote(vote){
                    document.getElementById("downVote").setAttribute("class", "voted");
                    }
             }
+             document.getElementById("voteDiv").style.display = "none";
         }
         else if(this.responseText == "CantDownVote"){
             document.getElementById("voteDiv").style.display = "block";

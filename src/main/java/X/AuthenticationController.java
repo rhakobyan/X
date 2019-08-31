@@ -8,13 +8,15 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.net.http.HttpRequest;
 
 @Controller
 public class AuthenticationController {
-
     @Autowired
     UserDatabaseService userDatabaseService = new UserDatabaseService();
     @GetMapping("/register")
@@ -40,7 +42,7 @@ public class AuthenticationController {
             return "register";
         }
         userDatabaseService.insert(user);
-        return "redirect:/explore";
+        return "redirect:/login";
     }
 
     @GetMapping("/login")
