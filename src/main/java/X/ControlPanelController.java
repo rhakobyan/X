@@ -23,33 +23,39 @@ public class ControlPanelController {
     HttpSession thisSession;
 
     @GetMapping("/cp")
-    public String controlPanel(Model model){
+    public String redirectCp(){
+        return "redirect:/cp/main";
+    }
+    @GetMapping("/cp/{panel}")
+    public String controlPanel(@PathVariable String panel, Model model){
+        String template = "";
         User user = sessionUser();
             if (user == null){
                 model.addAttribute("user", null);
                 return "redirect:/";
             }
             if (PermissionManager.hasControlPanelPermission(user)){
-                List<Map<String, Object>> users = userDatabaseService.getAllUsers();
-                System.out.println(users);
-                model.addAttribute("users", users);
+                if (panel.equals("main")) {
+                    List<Map<String, Object>> users = userDatabaseService.getAllUsers();
+                    System.out.println(users);
+                    model.addAttribute("users", users);
+                    template = "cp";
+                }
+               else if(panel.equals("tags")){
+                    template = tags(model, user);
+                }
                 model.addAttribute("user", user);
-                return "cp";
+
+               return template;
             }
             return "redirect:/";
 
 
     }
-
-    @GetMapping("/cp/tags")
-    public String tags(Model model){
+    private String tags(Model model, User user){
         model.addAttribute("tag", new Tag());
-        User user = sessionUser();
-        model.addAttribute("user", user);
-        if (user == null){
-            return "redirect:/";
-        }
-        else if (PermissionManager.hasControlPanelPermission(user)) {
+
+        if (PermissionManager.hasControlPanelPermission(user)) {
             return "add-tag";
         }
         return "redirect:/";

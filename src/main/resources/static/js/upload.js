@@ -37,7 +37,7 @@ function autocomplete(inp, arr) {
   inp.addEventListener("input", function(e) {
     var client = new HttpClient();
     var that = this;
-  client.get("http://localhost:8080/autocompleteTags?value="+this.value+"", function(response) {
+  client.get("/autocompleteTags?value="+this.value+"", function(response) {
    var arr = new Array();
    arr = response.slice( 1, -1).split(",");
     console.log(arr);

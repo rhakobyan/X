@@ -23,12 +23,12 @@
 
             <a href="/register" th:if="${session.user == null}" class="bar-item">Sign Up</i></a>
             <div class="dropdown" th:unless="${session.user == null}">
-                <a th:href="@{/user/{username}(username=${signedUser.username})}" th:text=${signedUser.username} class="bar-item"></a>
+                <a th:href="@{/user/{username}(username=${user.username})}" th:text=${user.username} class="bar-item"></a>
                 <br>
                 <div class="dropdown-content">
                     <a href="/log-out">Log Out</a>
                 </div>
-            </div>        </div>
+            </div>       </div>
     </div>
 </div>
 
