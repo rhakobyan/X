@@ -1,40 +1,39 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<title>devix</title>
-<meta charset="UTF-8">
-<!--<meta name="viewport" content="width=device-width, initial-scale=1"> -->
-<link rel="stylesheet" href="/css/xstyle.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<head>
+    <title>devix</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/xstyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+    <style>
+body, html {
+  height: 100%;
+}
+</style>
+</head>
 <body>
 
-<!-- Navbar (sit on top) -->
-<div id="container-navbar">
-    <div id="navbar">
-        <a href="/" id="logo"class="bar-item"><span style="color: #192b3b">dev</span><span style="color: #b43636">i</span><span style="color: #192b3b">x</span></a>
-        <!-- Right-sided navbar links -->
-        <div id="right-bar">
-            <a href="/about"  th:if="${session.user == null}" class="bar-item">About</a>
-            <a th:if="${session.user != null}" class="bar-item" href="/new-project">Add project</a>
-
-
-            <a href="/contact" th:if="${session.user == null}" class="bar-item">Contact</a>
-            <a href="/explore" th:if="${session.user != null}" class="bar-item">Explore</a>
-
-            <a href="/register" th:if="${session.user == null}" class="bar-item">Sign Up</i></a>
-            <div class="dropdown" th:unless="${session.user == null}">
-                <a th:href="@{/user/{username}(username=${user.username})}" th:text=${user.username} class="bar-item"></a>
-                <br>
-                <div class="dropdown-content">
-                    <a href="/log-out">Log Out</a>
-                </div>
-            </div>       </div>
+<div class="sidenav">
+    <div id="linkContainer">
+        <h5 style="color: #8e9297;">Control Panel</h5>
+        <div class="link-container">
+            <a href="/cp/main">Overview</a>
+        </div>
+        <div class="link-container">
+            <a href="/cp/users">Users</a>
+        </div>
+        <div class="link-container">
+            <a href="/cp/roles">Roles</a>
+        </div>
+        <div class="link-container">
+            <a href="/cp/tags">Tags</a>
+        </div>
     </div>
 </div>
 
+<div class="main">
 
-<!-- Header with full-height image -->
-<header id="home" style="padding:150px">
     <form th:object="${tag}" method="POST">
         <div class="container">
             <hr>
@@ -50,16 +49,7 @@
             </div>
         </div>
     </form>
-</header>
-
-<!-- Footer -->
-<footer id="footer">
-    <div id="footer-container" style="text-align: center;">
-        <i class="fa fa-twitter x-hover-opacity"></i>
-        <i class="fa fa-facebook-official x-hover-opacity"></i>
-        <i class="fa fa-instagram x-hover-opacity"></i>
-    </div>
-</footer>
+</div>
 
 </body>
 </html>

@@ -1,5 +1,7 @@
 package X;
 
+import X.database.PermissionDatabaseService;
+import X.database.RoleDatabaseService;
 import X.database.TagDatabaseService;
 import X.database.UserDatabaseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,10 @@ public class ControlPanelController {
     UserDatabaseService userDatabaseService = new UserDatabaseService();
     @Autowired
     TagDatabaseService tagDatabaseService = new TagDatabaseService();
+    @Autowired
+    RoleDatabaseService roleDatabaseService = new RoleDatabaseService();
+    @Autowired
+    PermissionDatabaseService permissionDatabaseService = new PermissionDatabaseService();
     @Autowired
     HttpSession thisSession;
 
@@ -44,6 +50,9 @@ public class ControlPanelController {
                else if(panel.equals("tags")){
                     template = tags(model, user);
                 }
+               else if(panel.equals("roles")){
+                   template = roles(model, user);
+                }
                 model.addAttribute("user", user);
 
                return template;
@@ -59,6 +68,15 @@ public class ControlPanelController {
             return "add-tag";
         }
         return "redirect:/";
+    }
+
+    private String roles(Model model, User user){
+           List<Role> roles = roleDatabaseService.loadAll();
+           List<Permission> permissions = permissionDatabaseService.loadAll();
+           model.addAttribute("permissions", permissions);
+           model.addAttribute("roles",roles);
+            return "roles";
+
     }
 
     @PostMapping("/cp/tags")

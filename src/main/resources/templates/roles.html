@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>devix</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/xstyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+body, html {
+  height: 100%;
+}
+</style>
+</head>
+<body>
+
+<div class="sidenav">
+    <div id="linkContainer">
+        <h5 style="color: #8e9297;">Control Panel</h5>
+        <div class="link-container">
+            <a href="/cp/main">Overview</a>
+        </div>
+        <div class="link-container">
+            <a href="/cp/users">Users</a>
+        </div>
+        <div class="link-container">
+            <a href="/cp/roles">Roles</a>
+        </div>
+        <div class="link-container">
+            <a href="/cp/tags">Tags</a>
+        </div>
+    </div>
+</div>
+
+<div class="main">
+    <div>
+        <h1 style="display:inline-block;">Roles</h1>
+        <i style="font-size:25px; margin-left:10px; cursor:pointer;" class="fa fa-plus-circle" aria-hidden="true"></i>
+    </div>
+    <div class="role-names">
+        <div class="role" th:each="role : ${roles}">
+            <span th:style="'color:'+${role.colour}+''" th:text="${role.name}"></span>
+        </div>
+
+    </div>
+    <div class="role-configuration">
+        <h4>Role Name</h4>
+        <input type="text"/>
+        <div>
+        <div style="display:inline-block;">
+        <h4>Role Colour</h4>
+        <input type="color" style="width:50px; height:50px; cursor:pointer; padding:0; border-radius:5px;">
+        </div>
+        <div style="display:inline-block; float:right;">
+        <h4>Priority</h4>
+        <input type="number" value="5" style="height:50px; width:50px; border-radius:5px; font-size:17px;">
+        </div>
+        </div>
+        <h4>Permissions</h4>
+        <div class="permission" th:each="permission : ${permissions}">
+            <span th:text="${permission.name}"></span>
+            <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider round"></span>
+            </label>
+            <div class="permission-description">
+                <span th:text="${permission.description}"></span>
+            </div>
+            <hr>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/js/roles.js"></script>
+</body>
+</html>
