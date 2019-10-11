@@ -79,6 +79,7 @@ public class ControlPanelController {
 
     }
 
+
     @PostMapping("/cp/tags")
     public String submitTag(Tag tag){
         tagDatabaseService.insert(tag);

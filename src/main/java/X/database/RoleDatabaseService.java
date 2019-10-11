@@ -39,6 +39,14 @@ public class RoleDatabaseService extends DatabaseService {
         return convertToRoleList(jdbcTemplate.queryForList(query));
     }
 
+    public Role get(String roleName){
+        String query = "SELECT * FROM "+TABLE_NAME+" WHERE name = '"+roleName+"';";
+        Map<String, Object> queryMap = jdbcTemplate.queryForMap(query);
+        Role role = new Role();
+        role.generateFromMap(queryMap);
+        return role;
+    }
+
     private List<Role> convertToRoleList(List<Map<String, Object>> rolesListMap){
         ArrayList<Role> roles = new ArrayList<>();
         for (int i = 0; i < rolesListMap.size(); i++) {

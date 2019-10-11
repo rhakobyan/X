@@ -8,29 +8,7 @@
 
 <body>
 
-<!-- Navbar (sit on top) -->
-<div id="container-navbar">
-    <div id="navbar">
-        <a href="/" id="logo"class="bar-item"><span style="color: #192b3b">dev</span><span style="color: #b43636">i</span><span style="color: #192b3b">x</span></a>
-        <!-- Right-sided navbar links -->
-        <div id="right-bar">
-            <a href="/about"  th:if="${session.user == null}" class="bar-item">About</a>
-            <a th:if="${session.user != null}" class="bar-item" href="/new-project">Add project</a>
-
-
-            <a href="/contact" th:if="${session.user == null}" class="bar-item">Contact</a>
-            <a href="/explore" th:if="${session.user != null}" class="bar-item">Explore</a>
-
-            <a href="/register" th:if="${session.user == null}" class="bar-item">Sign Up</i></a>
-            <div class="dropdown" th:unless="${session.user == null}">
-                <a th:href="@{/user/{username}(username=${user.username})}" th:text=${user.username} class="bar-item"></a>
-                <br>
-                <div class="dropdown-content">
-                    <a href="/log-out">Log Out</a>
-                </div>
-            </div>        </div>
-    </div>
-</div>
+<div th:replace="fragments/header ::header"></div>
 
 
 <!-- Header with full-height image -->
@@ -90,14 +68,7 @@
     </div>
 </header>
 
-<!-- Footer -->
-<footer id="footer">
-    <div id="footer-container" style="text-align: center;">
-        <i class="fa fa-twitter x-hover-opacity"></i>
-        <i class="fa fa-facebook-official x-hover-opacity"></i>
-        <i class="fa fa-instagram x-hover-opacity"></i>
-    </div>
-</footer>
+<footer th:replace="fragments/footer :: footer"></footer>
 <script type="text/javascript" src="/js/project.js"></script>
 </body>
 </html>
