@@ -11,20 +11,20 @@
 
 <div id="left-bar">
     <div id="description">
-        <h3 id="username" th:style="'color:'+${user.role.colour}+'; '+${user.role.colour}+';'">
-            <span th:if="${user.role.name == 'Administrator'}" th:text="${user.username}" class="admin"></span>
-            <span th:unless="${user.role.name == 'Administrator'}" th:text="${user.username}"></span>
+        <h3 id="username" th:style="'color:'+${pageUser.role.colour}+'; '+${pageUser.role.colour}+';'">
+            <span th:if="${pageUser.role.name == 'Administrator'}" th:text="${pageUser.username}" class="admin"></span>
+            <span th:unless="${pageUser.role.name == 'Administrator'}" th:text="${pageUser.username}"></span>
             <i id="editUsername" onclick="editUsername()" style="float: right;" th:if="${changeUsername == true}" class="fa fa-edit"></i>
         </h3>
         <form action="?changeUsername" id="usernameInput" style="display:none;" method="POST">
-        <input type="text" name="newUsername" th:value="${user.username}"/>
+        <input type="text" name="newUsername" th:value="${pageUser.username}"/>
         </form>
-        <h4 th:style="'color:'+${user.role.colour}+''" th:text="${user.role.name}"></h4>
+        <h4 th:style="'color:'+${pageUser.role.colour}+''" th:text="${pageUser.role.name}"></h4>
     </div>
-    <div id="profile" th:style="'background-image:url(' + ${user.profilePictureLocation} + ');'"></div>
+    <div id="profile" th:style="'background-image:url(' + ${pageUser.profilePictureLocation} + ');'"></div>
     <div id = "details">
-        <p>Registration: <span th:text="${user.registration}"></span></p>
-        <p>Reputation: <span th:text="${user.reputation}"></span></p>
+        <p>Registration: <span th:text="${pageUser.registration}"></span></p>
+        <p>Reputation: <span th:text="${pageUser.reputation}"></span></p>
         <p>Uploads: </p>
     </div>
 </div>
@@ -32,7 +32,7 @@
     <div id="tab-buttons">
         <button class="tablinks" onclick="openTab(event, 'messages')">Message Board</button>
         <button class="tablinks" onclick="openTab(event, 'uploads')">Uploads</button>
-        <button th:if="${session.user != null && signedUser.username== user.username}" class="tablinks" onclick="openTab(event, 'edit')">Edit Profile</button>
+        <button th:if="${session.user != null && user.username== pageUser.username}" class="tablinks" onclick="openTab(event, 'edit')">Edit Profile</button>
         <button th:if="${session.user != null && roleManagement == true}" class="tablinks" onclick="openTab(event, 'management')">Manage User</button>
     </div>
     <div id="tabs">

@@ -67,7 +67,7 @@ public class HomeController {
                 boolean canChangeUsername = (PermissionManager.hasChangeUsernamePermission(thisUser) && (user.getRole().getPriority() >= thisUser.getRoles().get(0).getPriority()));
                 model.addAttribute("changeUsername",canChangeUsername);
                 model.addAttribute("roleManagement",PermissionManager.hasChangeRoleManagementPermission(thisUser));
-                model.addAttribute("signedUser", thisUser);
+                model.addAttribute("user", thisUser);
                 ArrayList<String> roles = userDatabaseService.getAllRoles();
                 ArrayList<String> userRoles = userDatabaseService.getUserRoles(user.getID());
                 model.addAttribute("roles", roles);
@@ -76,7 +76,7 @@ public class HomeController {
            else {
                 model.addAttribute("changeUsername",false);
             }
-            model.addAttribute("user", user);
+            model.addAttribute("pageUser", user);
             return "user";
         }
         catch (NoSuchUserException ex){
